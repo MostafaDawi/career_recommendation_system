@@ -1,0 +1,27 @@
+# Core framework
+fastapi==0.110.1
+uvicorn[standard]==0.29.0
+
+# Data models and validation
+pydantic==2.7.1
+
+# HTTP requests between services
+httpx==0.27.0
+
+# Vector DB (open-source, CPU)
+faiss-cpu==1.7.4
+numpy==1.26.4
+
+# SQL database support
+sqlalchemy==2.0.30
+asyncpg==0.29.0               # PostgreSQL async driver (optional if using Postgres)
+
+# MongoDB (NoSQL) support
+motor==3.4.0                  # Async MongoDB driver
+
+# Environment variable management
+python-dotenv==1.0.1
+
+# Local embeddings (optional replacement for OpenAI)
+sentence-transformers==2.6.1  # For generating embeddings locally
+torch==2.3.0                  # Backend for sentence-transformers (ensure correct CUDA/CPU version)
