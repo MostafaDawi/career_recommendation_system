@@ -1,5 +1,4 @@
-*/.env
-user_service/.env
+*.env
 */node_modules
 */venv
 */.venv
