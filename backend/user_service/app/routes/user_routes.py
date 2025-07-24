@@ -1,10 +1,10 @@
 from fastapi import APIRouter, HTTPException, Depends, Body
 from app import services, database, schemas
+from app.auth.core import deps
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 
-
-router = APIRouter(prefix="/users", tags=["User"])
+router = APIRouter(prefix="/users", tags=["User"], dependencies=[Depends(deps.get_current_user)])
 
 @router.get("/", response_model=List[schemas.UserOut])
 async def get_users(db: AsyncSession = Depends(database.get_db)):
@@ -16,13 +16,6 @@ async def get_user(user_id: int, db: AsyncSession = Depends(database.get_db)):
     if not user:
         raise HTTPException(status_code=404, detail="User Not Found")
     return user
-
-@router.post("/", response_model=schemas.UserOut)
-async def create(user: schemas.UserCreate, db: AsyncSession = Depends(database.get_db)):
-    existing_user = await services.get_user_by_id_or_email(db=db, user_email=user.email)
-    if existing_user:
-        raise HTTPException(status_code=400, detail="User Already Exists")
-    return await services.create_user(db=db, req=user)
 
 @router.put("/update_user/{user_id}", response_model=schemas.UserOut)
 async def update(user_id:int, user: schemas.UserUpdate = Body(default=None), db: AsyncSession = Depends(database.get_db)):
