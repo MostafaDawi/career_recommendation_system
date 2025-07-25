@@ -1,4 +1,4 @@
-from embeddings import merge_fields, generate_embedding
+from backend.embedding_service.services.embeddings import merge_fields, generate_embedding
 user_input_data = {
     "interests": "reading, music",
     "skills": "python, data analysis",
