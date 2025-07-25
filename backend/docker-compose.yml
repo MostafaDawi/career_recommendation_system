@@ -24,5 +24,14 @@ services:
       - ./user_service:/app
     command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8001"]
 
+  embedding_service:
+    build: ./embedding_service
+    restart: always
+    ports:
+      - "8003:8003"
+    volumes:
+      - ./embedding_service:/app
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8003"]
+
 volumes:
   pgdata:
