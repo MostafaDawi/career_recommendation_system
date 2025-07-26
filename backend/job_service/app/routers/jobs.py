@@ -1,17 +1,18 @@
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, Body, Depends, HTTPException, UploadFile, File
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 from app.models import Job
-from app.schemas import JobCreate, JobOut
+from app.schemas import JobCreate, JobOut, JobOutEmbedded
 from app.database import get_db
 from app.services.embedding import send_to_embedding_service
 from app.utils.csv_parser import parse_csv
 from typing import List
 import json
 
-router = APIRouter()
+router = APIRouter( prefix="/jobs", tags=["jobs"])
 
 @router.post("/upload")
-async def upload_jobs(file: UploadFile = File(...), db: Session = Depends(get_db)):
+async def upload_jobs(file: UploadFile = File(...), db: AsyncSession = Depends(get_db)):
     try:
         if file.content_type == "text/csv":
             jobs_data = parse_csv(await file.read())  # Returns list[dict]
@@ -34,18 +35,44 @@ async def upload_jobs(file: UploadFile = File(...), db: Session = Depends(get_db
             db.commit()
             db.refresh(job)
 
-            await send_to_embedding_service(job)
-            created_jobs.append(str(job.id))
+            result = await send_to_embedding_service(job)
+            created_jobs.append({"jobId": str(job.id), "embedding":result.get("embedding")})
 
         return {"message": f"{len(created_jobs)} jobs uploaded", "job_ids": created_jobs}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@router.post("/create_job", response_model=JobOutEmbedded)
+async def upload_jobs_json(job: JobCreate, db: AsyncSession = Depends(get_db)):
+    try:
+        job_obj = Job(**job.model_dump())
+        
+        db.add(job_obj)
+        await db.commit()
+        await db.refresh(job_obj)
+
+        print("HERE_-------------------")
+        # Optionally call embedding service
+        result = await send_to_embedding_service(job_obj)
+        embedding = result.get("embedding")
+
+        # Create the response dict manually
+        job_dict = JobOut.model_validate(job_obj).model_dump()
+        job_dict["embedding"] = embedding
+
+        # ===== TO BE ADDED WHEN VECTOR DB IS READY =====
+
+        return JobOutEmbedded(**job_dict)
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @router.get("/", response_model=List[JobOut])
-async def get_jobs(page: int = 1, limit: int = 10, db: Session = Depends(get_db)):
+async def get_jobs(page: int = 1, limit: int = 10, db: AsyncSession = Depends(get_db)):
     try:
         offset = (page - 1) * limit
-        jobs = db.query(Job).offset(offset).limit(limit).all()
+        result = await db.execute(select(Job).offset(offset).limit(limit))
+        jobs = result.scalars().all()  # Correct way to get list of Job instances
         return jobs
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
