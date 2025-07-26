@@ -13,3 +13,7 @@ app = FastAPI(lifespan=lifespan)
 
 app.include_router(auth_routes.router)
 app.include_router(user_routes.router)
+
+@app.get("/")
+async def root():
+    return {"message": "Welcome to the User Service!"}

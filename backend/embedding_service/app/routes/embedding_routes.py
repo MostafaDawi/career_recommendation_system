@@ -8,13 +8,13 @@ router = APIRouter(prefix="/embed")
 def read_root():
     return{"message":"careercompass embedding dervice is running!"}
 
-@router.post("/embedding/user")
+@router.post("/user")
 def create_embedding(data: schemas.userInputData):
     combined_text = merge_fields(data.model_dump(),"user")
     embedding = generate_embedding(combined_text)
     return {"embedding": embedding}
 
-@router.post("/embedding/job")
+@router.post("/job")
 def create_job_embedding(data: schemas.JobInputData):
     combined_text = merge_fields(data.model_dump(), "job")
     embedding = generate_embedding(combined_text)
