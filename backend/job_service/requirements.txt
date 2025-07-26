@@ -6,4 +6,5 @@ pandas==2.2.3
 httpx==0.25.0
 pydantic==2.4.2
 python-dotenv==1.0.0
-# python-multiparticle
+asyncpg==0.29.0 
+python-multipart
