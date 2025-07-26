@@ -1,9 +1,16 @@
 from fastapi import FastAPI
+from fastapi.concurrency import asynccontextmanager
 from app.routers.jobs import router as jobs_router
-from app.database import engine, Base
+from app.database import create_db_and_tables
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await create_db_and_tables()
+    yield
+    # Optionally add shutdown code here
+
+app = FastAPI(lifespan=lifespan)
 
 # Optional: Enable CORS (for frontend integration)
 app.add_middleware(
@@ -15,12 +22,7 @@ app.add_middleware(
 )
 
 # Register the jobs router
-app.include_router(jobs_router, prefix="/jobs", tags=["jobs"])
-
-# Run this on app startup to create tables (no-op if they already exist)
-@app.on_event("startup")
-def on_startup():
-    Base.metadata.create_all(bind=engine)
+app.include_router(jobs_router)
 
 @app.get("/")
 async def root():

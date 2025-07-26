@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-EMBEDDING_SERVICE_URL = os.getenv("EMBEDDING_SERVICE_URL", "http://embedding-service/embedding/generate")
+EMBEDDING_SERVICE_URL = os.getenv("EMBEDDING_SERVICE_URL", "http://embedding_service:8003/embed/job")
 
 async def send_to_embedding_service(job):
     payload = {
