@@ -33,5 +33,18 @@ services:
       - ./embedding_service:/app
     command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8003"]
 
+  job_service:
+    build: ./job_service
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgresql+asyncpg://user:password@postgres:5432/job_service_db
+    ports:
+      - "8004:8004"
+    volumes:
+      - ./job_service:/app
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8004"]
+
 volumes:
   pgdata:
