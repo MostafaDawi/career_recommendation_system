@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models import Job
 from app.schemas import JobCreate, JobOut, JobOutEmbedded
 from app.database import get_db
-from app.services.embedding import send_to_embedding_service
+from app.services import store_in_vectordb, embedding_service
 from app.utils.csv_parser import parse_csv
 from typing import List
 import json
@@ -35,14 +35,14 @@ async def upload_jobs(file: UploadFile = File(...), db: AsyncSession = Depends(g
             db.commit()
             db.refresh(job)
 
-            result = await send_to_embedding_service(job)
+            result = await embedding_service.send_to_embedding_service(job)
             created_jobs.append({"jobId": str(job.id), "embedding":result.get("embedding")})
 
         return {"message": f"{len(created_jobs)} jobs uploaded", "job_ids": created_jobs}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.post("/create_job", response_model=JobOutEmbedded)
+@router.post("/create_job")
 async def upload_jobs_json(job: JobCreate, db: AsyncSession = Depends(get_db)):
     try:
         job_obj = Job(**job.model_dump())
@@ -53,16 +53,20 @@ async def upload_jobs_json(job: JobCreate, db: AsyncSession = Depends(get_db)):
 
         print("HERE_-------------------")
         # Optionally call embedding service
-        result = await send_to_embedding_service(job_obj)
+        result = await embedding_service.send_to_embedding_service(job_obj)
         embedding = result.get("embedding")
 
         # Create the response dict manually
         job_dict = JobOut.model_validate(job_obj).model_dump()
         job_dict["embedding"] = embedding
-
+        job_dict["id"] = str(job_dict["id"])
         # ===== TO BE ADDED WHEN VECTOR DB IS READY =====
+        try:
+            res = await store_in_vectordb.send_to_vectordb_service(job_dict)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
 
-        return JobOutEmbedded(**job_dict)
+        return {"message":"Stored in Postgres and Vector DBs successfully!", "job":JobOutEmbedded(**job_dict)}
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
