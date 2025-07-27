@@ -9,14 +9,14 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 
 # Install dependencies
-COPY requirements.txt .
+COPY .env requirements.txt /app/
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
 # Copy all project files
-COPY . .
+COPY . /app
 
 # Expose FastAPI port
 EXPOSE 8005
 
 # Start FastAPI app
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8005"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8005"]

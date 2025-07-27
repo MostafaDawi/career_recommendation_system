@@ -1,12 +1,17 @@
 from fastapi import FastAPI
-from schemas import SearchRequest, SearchResult  # <- your defined Pydantic models
-
-from my_qdrant_client import client, collection_name  # from qdrant_client.py
-from embedding import embed_text  # from embeddings.py
-
+from fastapi.concurrency import asynccontextmanager
+from app import schemas  # <- your defined Pydantic models
+from app.qdrant_service import client, collection_name, create_collection  # from qdrant_client.py
 from qdrant_client.http.models import PointStruct, Filter, FieldCondition, MatchValue
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Run this on startup
+    create_collection()
+    yield
+    # (optional) cleanup code on shutdown
+
+app = FastAPI(lifespan=lifespan)
 
 @app.get("/")
 def read_root():
@@ -14,12 +19,11 @@ def read_root():
 
 
 @app.post("/search")
-def search_query(request: SearchRequest):
-    vector = embed_text(request.query)
+async def search_query(request: schemas.SearchRequest):
 
     search_result = client.search(
         collection_name=collection_name,
-        query_vector=vector,
+        query_vector=request.vector,
         limit=request.top_k
     )
 
