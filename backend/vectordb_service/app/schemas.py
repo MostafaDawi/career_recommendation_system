@@ -12,7 +12,7 @@ class JobPosting(BaseModel):
     work_type: Optional[str] = "unknown"
 
 class SearchRequest(BaseModel):
-    query: str
+    vector: List[float]
     top_k: int = 3
 
 class SearchResult(BaseModel):
