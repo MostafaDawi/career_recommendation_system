@@ -1,7 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.concurrency import asynccontextmanager
+from pydantic import BaseModel
 from app import schemas  # <- your defined Pydantic models
-from app.qdrant_service import client, collection_name, create_collection  # from qdrant_client.py
+from app.qdrant_service import client, collection_name, create_collection, EMBEDDING_DIMENSIONALITY  # from qdrant_client.py
+from app.util import send_to_embedding_service
 from qdrant_client.http.models import PointStruct, Filter, FieldCondition, MatchValue
 
 @asynccontextmanager
@@ -19,12 +21,16 @@ def read_root():
 
 
 @app.post("/search")
-async def search_query(request: schemas.SearchRequest):
+async def search_query(request: schemas.SearchUser):
+
+    result = await send_to_embedding_service(request)
+
+    res = schemas.SearchRequest(vector=result.get("embedding"), top_k=3)
 
     search_result = client.search(
         collection_name=collection_name,
-        query_vector=request.vector,
-        limit=request.top_k
+        query_vector=res.vector,
+        limit=res.top_k
     )
 
     results = []
@@ -38,3 +44,28 @@ async def search_query(request: schemas.SearchRequest):
         })
 
     return {"results": results}
+
+@app.post("/store")
+async def store_vector(job: schemas.JobPosting_v2):
+    if len(job.embedding) != EMBEDDING_DIMENSIONALITY:
+        raise HTTPException(status_code=400, detail=f"Embedding must be {EMBEDDING_DIMENSIONALITY} dimensions")
+
+    point = PointStruct(
+        id=str(job.id),  # <-- This acts as the foreign key in Qdrant
+        vector=job.embedding,
+        payload={
+            "job_id": str(job.id),  # Optional but good to also include in payload
+            "job_title": job.title,
+            "description": job.description,
+            "salary": job.salary,
+            "location": job.location,
+            "tags": job.tags,
+        }
+    )
+
+    client.upsert(
+        collection_name=collection_name,
+        points=[point]
+    )
+
+    return {"status": "success", "job_id": job.id}
