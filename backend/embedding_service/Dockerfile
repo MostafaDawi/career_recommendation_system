@@ -5,18 +5,28 @@ FROM python:3.10-slim
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# Create working directory
+# Set working directory
 WORKDIR /app
 
-# Install dependencies
+# Install Python dependencies
 COPY ./requirements.txt /app/
-RUN pip install --upgrade pip && pip install torch==2.7.0+cpu --index-url https://download.pytorch.org/whl/cpu && pip install -r requirements.txt
+RUN pip install --upgrade pip
 
-# Copy the rest of the application code
+# Install torch separately to avoid conflicts (important)
+RUN pip install torch==2.2.0+cpu --index-url https://download.pytorch.org/whl/cpu
+RUN pip install --no-cache-dir numpy==1.24.4
+
+# Now install remaining packages
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Preload model (download once at build time)
+RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L6-v2')"
+
+# Copy rest of the application
 COPY . /app
 
-# Expose port (match Docker Compose)
+# Expose port
 EXPOSE 8003
 
-# Start FastAPI app with Uvicorn
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8003"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8003", "--log-level", "info"]
+

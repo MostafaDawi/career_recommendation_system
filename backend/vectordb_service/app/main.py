@@ -21,12 +21,11 @@ def read_root():
 
 
 @app.post("/search")
-async def search_query(request: schemas.SearchUser):
+async def search_query(request: schemas.SearchRequest):
 
-    result = await send_to_embedding_service(request)
-
-    res = schemas.SearchRequest(vector=result.get("embedding"), top_k=3)
-
+    res = schemas.SearchRequest(vector=request.vector, top_k=request.top_k)
+    print(f"Received vector: {res.vector} with top_k: {res.top_k}")
+    
     search_result = client.search(
         collection_name=collection_name,
         query_vector=res.vector,

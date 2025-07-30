@@ -1,5 +1,6 @@
 from sentence_transformers import SentenceTransformer
 model = SentenceTransformer('all-MiniLM-L6-v2')
+
 def merge_fields(data: dict, mode: str) -> str:
     if mode == "user":
         interests = data.get("interests", "")
