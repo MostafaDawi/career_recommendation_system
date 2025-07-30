@@ -32,6 +32,18 @@ services:
       - ./user_service:/app
     command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8001"]
 
+  recommendation_service:
+    build: ./recommendation_service
+    restart: always
+    depends_on:
+      - embedding_service
+      - vectordb_service
+    ports:
+      - "8002:8002"
+    volumes:
+      - ./recommendation_service:/app
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8002"]
+
   embedding_service:
     build: ./embedding_service
     restart: always
@@ -46,6 +58,7 @@ services:
     restart: always
     depends_on:
       - postgres
+      - embedding_service
     environment:
       DATABASE_URL: postgresql+asyncpg://user:password@postgres:5432/job_service_db
     ports:
