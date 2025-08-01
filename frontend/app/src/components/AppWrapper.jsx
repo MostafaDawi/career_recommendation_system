@@ -4,13 +4,18 @@ import MainLayout from "../layouts/MainLayout";
 import AuthLayout from "../layouts/AuthLayout";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
+import MBTIQuiz from "../pages/MBTIQuiz";
 
 // Wrapper to access route info and conditionally show navbar
 function AppWrapper() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<MainLayout />} />
+        <Route element={<MainLayout />} >
+          <Route element={<MBTIQuiz} />
+            
+          
+        </Route>
 
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<Login />} />
