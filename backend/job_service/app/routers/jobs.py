@@ -9,6 +9,7 @@ from app.utils.csv_parser import parse_csv
 from typing import List
 import json
 from backend.user_service.app.auth.core import token
+from typing import List, Optional
 
 router = APIRouter( prefix="/jobs", tags=["jobs"])
 
@@ -124,5 +125,47 @@ async def delete_job(job_id: str, db: AsyncSession = Depends(get_db)):
         await db.delete(job)
         await db.commit()
         return {"message": f"Job {job_id} deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+
+@router.get("/search", response_model=List[JobOut])
+async def search_jobs(
+    title: Optional[str] = None,
+    location: Optional[str] = None,
+    tags: Optional[str] = None,
+    min_salary: Optional[int] = None,
+    max_salary: Optional[int] = None,
+    page: int = 1,
+    limit: int = 10,
+    db: AsyncSession = Depends(get_db)
+):
+    try:
+        # Set offset based on pagination
+        offset = (page - 1) * limit
+
+        # Build the query
+        query = db.query(Job)
+
+        # Apply filters if they exist
+        if title:
+            query = query.filter(Job.title.ilike(f"%{title}%"))
+        if location:
+            query = query.filter(Job.location.ilike(f"%{location}%"))
+        if tags:
+            query = query.filter(Job.tags.any(tags))  # Assumes tags is a list
+        if min_salary:
+            query = query.filter(Job.salary >= min_salary)
+        if max_salary:
+            query = query.filter(Job.salary <= max_salary)
+
+        # Apply pagination
+        query = query.offset(offset).limit(limit)
+
+        # Execute the query and fetch results
+        result = await db.execute(query)
+        jobs = result.scalars().all()
+
+        return jobs
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
