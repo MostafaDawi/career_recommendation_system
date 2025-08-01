@@ -10,9 +10,7 @@ function AppWrapper() {
   return (
     <>
       <Routes>
-        <Route element={<MainLayout />}>
-          <Route path="/" element={<Home />} />
-        </Route>
+        <Route path="/" element={<MainLayout />} />
 
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<Login />} />
