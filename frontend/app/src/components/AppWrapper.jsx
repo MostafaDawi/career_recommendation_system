@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "../pages/WelcomePage";
-import Navbar from "../components/Navbar";
 import MainLayout from "../layouts/MainLayout";
 import AuthLayout from "../layouts/AuthLayout";
 import Login from "../pages/Login";
@@ -10,7 +9,6 @@ import Register from "../pages/Register";
 function AppWrapper() {
   return (
     <>
-      <Navbar />
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
