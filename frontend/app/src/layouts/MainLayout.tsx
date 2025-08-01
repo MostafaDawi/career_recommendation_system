@@ -4,10 +4,12 @@ import Footer from "../components/Footer";
 import MBTIQuiz from "../pages/MBTIQuiz.js";
 import ResultsPage from "../pages/ResultsPage.js";
 import HomePage from "../pages/HomePage.js";
+import { useNavigate } from "react-router-dom";
 
 const MainLayout = () => {
   const [page, setPage] = useState("home"); // 'home', 'quiz', 'results'
   const [mbtiType, setMbtiType] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const handleStartQuiz = () => {
     setPage("quiz");
