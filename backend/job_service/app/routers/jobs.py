@@ -8,6 +8,7 @@ from app.services import store_in_vectordb, embedding_service
 from app.utils.csv_parser import parse_csv
 from typing import List
 import json
+from backend.user_service.app.auth.core import token
 
 router = APIRouter( prefix="/jobs", tags=["jobs"])
 
@@ -45,8 +46,9 @@ async def upload_jobs(file: UploadFile = File(...), db: AsyncSession = Depends(g
 @router.post("/create_job")
 async def upload_jobs_json(job: JobCreate, db: AsyncSession = Depends(get_db)):
     try:
-        job_obj = Job(**job.model_dump())
-        
+        user_id = token["sub"]
+        job_obj = Job(**job.model_dump(), user_id=user_id)
+
         db.add(job_obj)
         await db.commit()
         await db.refresh(job_obj)
@@ -78,5 +80,49 @@ async def get_jobs(page: int = 1, limit: int = 10, db: AsyncSession = Depends(ge
         result = await db.execute(select(Job).offset(offset).limit(limit))
         jobs = result.scalars().all()  # Correct way to get list of Job instances
         return jobs
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@router.put("/{job_id}", response_model=JobOut)
+async def update_job(
+    job_id: str, updated_job: JobCreate, db: AsyncSession = Depends(get_db)
+):
+    try:
+        result = await db.execute(select(Job).where(Job.id == job_id))
+        job = result.scalar_one_or_none()
+
+        if not job:
+            raise HTTPException(status_code=404, detail="Job not found")
+
+        user_id = token["sub"]
+        if job.user_id != user_id:
+            raise HTTPException(status_code=403, detail="You do not have permission to update this job")
+        
+        for field, value in updated_job.model_dump().items():
+            setattr(job, field, value)
+
+        await db.commit()
+        await db.refresh(job)
+
+        return job
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.delete("/{job_id}")
+async def delete_job(job_id: str, db: AsyncSession = Depends(get_db)):
+    try:
+        result = await db.execute(select(Job).where(Job.id == job_id))
+        job = result.scalar_one_or_none()
+
+        if not job:
+            raise HTTPException(status_code=404, detail="Job not found")
+
+        user_id = token["sub"]
+        if job.user_id != user_id:
+            raise HTTPException(status_code=403, detail="You do not have permission to delete this job")
+        
+        await db.delete(job)
+        await db.commit()
+        return {"message": f"Job {job_id} deleted successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
