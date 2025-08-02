@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* Custom styles below */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(25px);
+  border: 2px solid rgba(139, 92, 246, 0.3);
+  box-shadow: 0 25px 50px -12px rgba(139, 92, 246, 0.25);
+}
+
+.top-match-card {
+  background: linear-gradient(135deg, #684b9c, #621aa4, #9888a7, #c697dc, #8f6896);
+  background-size: 400% 400%;
+  animation: gradientShift 4s ease infinite;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 35px 70px -15px rgba(139, 92, 246, 0.4);
+  border: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+/* ... rest of your custom CSS ... */
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* add all other animations here */
