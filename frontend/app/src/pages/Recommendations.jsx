@@ -1,19 +1,19 @@
-import { useState } from 'react';
-import Header from '../components/Header';
-import CareerCard from '../components/CareerCard';
-import FloatingElements from '../components/FloatingElements';
-import CareerModal from '../components/CareerModal';
+import { useState } from "react";
+import Header from "../components/Header";
+import CareerCard from "../components/CareerCard";
+import FloatingElements from "../components/FloatingElements";
+import CareerModal from "../components/CareerModal";
 
 const Recommendations = () => {
   const [openModal, setOpenModal] = useState(null);
 
   const careers = [
     {
-      id: 'fullstack',
-      title: 'Full Stack Developer',
-      compatibility: '98%',
+      id: "fullstack",
+      title: "Full Stack Developer",
+      compatibility: "98%",
       description:
-        'Build complete web applications from front-end to back-end. Perfect for your coding passion and problem-solving skills.',
+        "Build complete web applications from front-end to back-end. Perfect for your coding passion and problem-solving skills.",
       icon: (
         <svg
           className="w-12 h-12 text-white"
@@ -30,14 +30,14 @@ const Recommendations = () => {
         </svg>
       ),
       isTopMatch: true,
-      color: 'from-purple-600 to-pink-500',
+      color: "from-purple-600 to-pink-500",
     },
     {
-      id: 'ux',
-      title: 'UX/UI Designer',
-      compatibility: '85%',
+      id: "ux",
+      title: "UX/UI Designer",
+      compatibility: "85%",
       description:
-        'Create beautiful and intuitive user experiences that delight millions of users worldwide. Perfect for creative problem-solvers.',
+        "Create beautiful and intuitive user experiences that delight millions of users worldwide. Perfect for creative problem-solvers.",
       icon: (
         <svg
           className="w-10 h-10 text-white"
@@ -54,14 +54,14 @@ const Recommendations = () => {
         </svg>
       ),
       isTopMatch: false,
-      color: 'from-pink-500 to-purple-600',
+      color: "from-pink-500 to-purple-600",
     },
     {
-      id: 'data',
-      title: 'Data Scientist',
-      compatibility: '78%',
+      id: "data",
+      title: "Data Scientist",
+      compatibility: "78%",
       description:
-        'Unlock insights from data to drive business decisions and predict future trends. Ideal for analytical thinkers.',
+        "Unlock insights from data to drive business decisions and predict future trends. Ideal for analytical thinkers.",
       icon: (
         <svg
           className="w-10 h-10 text-white"
@@ -78,7 +78,7 @@ const Recommendations = () => {
         </svg>
       ),
       isTopMatch: false,
-      color: 'from-blue-500 to-cyan-600',
+      color: "from-blue-500 to-cyan-600",
     },
   ];
 

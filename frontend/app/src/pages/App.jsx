@@ -1,4 +1,4 @@
-import Recommendations from './pages/Recommendations';
+import Recommendations from "./Recommendations";
 
 function App() {
   return (
