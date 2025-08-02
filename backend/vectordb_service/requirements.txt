@@ -1,0 +1,5 @@
+fastapi
+uvicorn
+qdrant-client
+pydantic
+fastembed

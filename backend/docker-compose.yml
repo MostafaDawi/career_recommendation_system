@@ -1,0 +1,81 @@
+services:
+  postgres:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+
+  qdrant:
+    image: qdrant/qdrant
+    restart: always
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant_data:/qdrant/storage
+
+  user_service:
+    build: ./user_service
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgresql+asyncpg://user:password@postgres:5432/user_service_db
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./user_service:/app
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8001"]
+
+  recommendation_service:
+    build: ./recommendation_service
+    restart: always
+    depends_on:
+      - embedding_service
+      - vectordb_service
+    ports:
+      - "8002:8002"
+    volumes:
+      - ./recommendation_service:/app
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8002"]
+
+  embedding_service:
+    build: ./embedding_service
+    restart: always
+    ports:
+      - "8003:8003"
+    volumes:
+      - ./embedding_service:/app
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8003"]
+
+  job_service:
+    build: ./job_service
+    restart: always
+    depends_on:
+      - postgres
+      - embedding_service
+    environment:
+      DATABASE_URL: postgresql+asyncpg://user:password@postgres:5432/job_service_db
+    ports:
+      - "8004:8004"
+    volumes:
+      - ./job_service:/app
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8004"]
+
+  vectordb_service:
+    build: ./vectordb_service
+    restart: always
+    ports:
+      - "8005:8005"
+    volumes:
+      - ./vectordb_service:/app
+    depends_on:
+      - qdrant
+volumes:
+  pgdata:
+  qdrant_data:

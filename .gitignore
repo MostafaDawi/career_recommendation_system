@@ -1,5 +1,9 @@
-.env
-node_modules"data/postings.csv" 
-"data/postings.csv" 
-/data/
+*/.env
+*.env
+user_service/.env
+*/node_modules
+*node_modules
+*/venv
+*/.venv
 
+*data
