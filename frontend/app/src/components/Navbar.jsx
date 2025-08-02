@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 function Navbar() {
   return (
     // <!-- Navigation -->
-    <nav className="bg-white shadow-sm fixed w-full z-10">
+    <nav className="bg-white shadow-sm fixed w-full z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
@@ -34,10 +34,10 @@ function Navbar() {
                 Home
               </Link>
               <Link
-                href="#how-it-works"
+                to="/recommended"
                 className="nav-link border-transparent text-gray-600 hover:text-indigo-600 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
               >
-                How It Works
+                Recommendations
               </Link>
               <Link
                 href="#features"

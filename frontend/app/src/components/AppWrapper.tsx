@@ -3,10 +3,12 @@ import MainLayout from "../layouts/MainLayout.js";
 import AuthLayout from "../layouts/AuthLayout.jsx";
 import Login from "../pages/Login.jsx";
 import Register from "../pages/Register.jsx";
+import Recommendations from "../pages/Recommendations.jsx";
 import MBTIQuiz from "../pages/MBTIQuiz.js";
 import { useState } from "react";
 import ResultsPage from "../pages/ResultsPage.js";
 import HomePage from "../pages/HomePage.js";
+import RecommendLayout from "../layouts/RecommendLayout.js";
 
 function AppWrapper() {
   const [page, setPage] = useState("home"); // 'home', 'quiz', 'results'
@@ -43,6 +45,10 @@ function AppWrapper() {
             path="/"
             element={<HomePage onStartQuiz={handleStartQuiz} />}
           />
+        </Route>
+
+        <Route element={<RecommendLayout />}>
+          <Route path="/recommended" element={<Recommendations />} />
         </Route>
 
         <Route element={<AuthLayout />}>
