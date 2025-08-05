@@ -18,7 +18,7 @@ async def get_user(user_id: int, db: AsyncSession = Depends(database.get_db)):
     return user
 
 @router.put("/update_user/{user_id}", response_model=schemas.UserOut)
-async def update(user_id:int, user: schemas.UserUpdate = Body(default=None), db: AsyncSession = Depends(database.get_db)):
+async def update_user(user_id:int, user: schemas.UserUpdate = Body(default=None), db: AsyncSession = Depends(database.get_db)):
 
     if not user:
         raise HTTPException(status_code=400, detail="No Data Provided")
@@ -29,7 +29,7 @@ async def update(user_id:int, user: schemas.UserUpdate = Body(default=None), db:
     return await services.update_user(db=db, req=user, user_id=user_id)
 
 @router.delete("/{user_id}")
-async def create(user_id: int, db: AsyncSession = Depends(database.get_db)):
+async def delete_user(user_id: int, db: AsyncSession = Depends(database.get_db)):
     user = await services.get_user_by_id_or_email(db=db, user_email=user.email)
     if user:
         raise HTTPException(status_code=400, detail="User Doesn't Exist")

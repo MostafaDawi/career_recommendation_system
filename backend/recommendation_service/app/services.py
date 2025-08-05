@@ -12,9 +12,9 @@ VECTOR_SERVICE=os.getenv("VECTOR_SERVICE")
 async def get_recommendations(user: UserProfile):
     try:
         async with httpx.AsyncClient() as client:
-            # 1️⃣ Send user data to the embedding service
+            # 1. Send user data to the embedding service
             embedding_response = await client.post(
-                f"{EMBEDDING_SERVICE}/user",  # <- Your 1st microservice URL
+                f"{EMBEDDING_SERVICE}/user",
                 json=user.model_dump()
             )
             embedding_response.raise_for_status()
@@ -23,9 +23,9 @@ async def get_recommendations(user: UserProfile):
             if not embeddings:
                 raise HTTPException(status_code=500, detail="Failed to get embeddings")
 
-            # 2️⃣ Send embeddings to vector DB (job matching service)
+            # 2. Send embeddings to vector DB (job matching service)
             match_response = await client.post(
-                f"{VECTOR_SERVICE}/search",  # <- Your 2nd microservice URL
+                f"{VECTOR_SERVICE}/search",
                 json={"vector": embeddings, "top_k": 3}
             )
             match_response.raise_for_status()

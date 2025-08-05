@@ -8,7 +8,7 @@ def service_running():
     return {"message":"Welcome to API Gateway"}
 
 # Register microservice routes
-# app.include_router(auth.router, prefix="/auth")
+app.include_router(auth.router, prefix="/auth")
 app.include_router(user.router, prefix="/user")
+app.include_router(recommendation.router, prefix="/recommend")
 # app.include_router(job.router, prefix="/jobs")
-# app.include_router(recommendation.router, prefix="/recommendation")
