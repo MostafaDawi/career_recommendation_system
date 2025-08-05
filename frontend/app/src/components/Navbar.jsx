@@ -40,10 +40,10 @@ function Navbar() {
                 Recommendations
               </Link>
               <Link
-                href="#features"
+                to="/quiz"
                 className="nav-link border-transparent text-gray-600 hover:text-indigo-600 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
               >
-                Features
+                Quiz
               </Link>
               <Link
                 href="#testimonials"

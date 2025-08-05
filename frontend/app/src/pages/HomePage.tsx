@@ -102,7 +102,7 @@ const HeroSection: React.FC<HomePageProps> = ({ onStartQuiz }) => (
             <img
               src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/754edd76-1066-4a61-8bfc-3f52912a7ff7.png"
               alt="AI interface with career paths"
-              className="rounded-lg shadow-2xl"
+              className="rounded-lg shadow-2xl w-120"
             />
             <div className="absolute -bottom-5 -right-5 bg-white p-4 rounded-lg shadow-lg">
               <div className="flex items-center">
