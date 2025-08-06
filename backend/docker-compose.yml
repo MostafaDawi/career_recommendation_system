@@ -19,6 +19,15 @@ services:
     volumes:
       - qdrant_data:/qdrant/storage
 
+  api_gateway:
+    build: ./api_gateway
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api_gateway:/app
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
   user_service:
     build: ./user_service
     restart: always

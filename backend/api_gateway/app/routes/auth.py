@@ -6,7 +6,7 @@ import os
 
 router = APIRouter(tags=["Auth"])
 
-AUTH_SERVICE_URL = os.getenv("USER_SERVICE_URL", "http://localhost:8001/auth")
+AUTH_SERVICE_URL = os.getenv("AUTH_SERVICE_URL", "http://localhost:8001/auth")
 
 @router.post("/login")
 async def login_user(request: Request):
