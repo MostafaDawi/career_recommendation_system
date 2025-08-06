@@ -8,7 +8,6 @@ from app.services import store_in_vectordb, embedding_service
 from app.utils.csv_parser import parse_csv
 from typing import List
 import json
-from backend.user_service.app.auth.core import token
 from typing import List, Optional
 
 router = APIRouter( prefix="/jobs", tags=["jobs"])
@@ -47,14 +46,12 @@ async def upload_jobs(file: UploadFile = File(...), db: AsyncSession = Depends(g
 @router.post("/create_job")
 async def upload_jobs_json(job: JobCreate, db: AsyncSession = Depends(get_db)):
     try:
-        user_id = token["sub"]
-        job_obj = Job(**job.model_dump(), user_id=user_id)
+        job_obj = Job(**job.model_dump())
 
         db.add(job_obj)
         await db.commit()
         await db.refresh(job_obj)
 
-        print("HERE_-------------------")
         # Optionally call embedding service
         result = await embedding_service.send_to_embedding_service(job_obj)
         embedding = result.get("embedding")

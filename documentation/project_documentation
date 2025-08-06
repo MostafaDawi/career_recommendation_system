@@ -1,0 +1,57 @@
+# Project Documentation
+
+
+
+## 1. Motivation & Problem Statement
+
+Why did you build this? What gap are you solving?
+
+## 2. System Overview
+
+What does the system do? Diagram if possible.
+
+##  Technologies Used
+
+
+## Architecture
+
+- Overview of components (e.g., frontend, backend, database)
+- Microservice interactions
+- Data flow
+
+## Embedding & Recommendation Engine
+
+- How embeddings are created
+- How cosine similarity or vector search is used
+- Qdrant usage and queries
+
+## Dataset
+
+- What data was used
+- How it was cleaned or embedded
+- Any limitations
+
+## Key Features
+
+- Career suggestions
+- FAQ chatbot
+
+
+## Deployment & Hosting
+
+- Docker setup
+- API hosting (if applicable)
+- vercel frontend hosting
+
+## Future Work
+
+- What could be added/improved?
+
+## Contributors
+
+team with roles in more detail.
+
+## References
+
+- Research papers
+- APIs or libraries used
