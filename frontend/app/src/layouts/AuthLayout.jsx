@@ -6,7 +6,7 @@ const AuthLayout = () => {
   return (
     <>
       <Navbar />
-      <main className="pt-20 px-6 bg-gray-50">
+      <main className="pt-8 px-6 bg-gray-50">
         <Outlet />
       </main>
     </>
