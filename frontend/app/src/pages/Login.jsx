@@ -1,12 +1,19 @@
 import React, { useState } from "react";
 import Decorators from "../components/Decorators";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import { useAuth } from "../utils/hooks";
 
 const Login = () => {
+  const { login, loginError, isAuthenticated, user, logout } = useAuth();
+
   const [loginForm, ChangeForm] = useState({
-    username: "",
+    email: "",
     password: "",
   });
+
+  if (isAuthenticated) {
+    return <Navigate to="/" />;
+  }
 
   const handleForm = (e) => {
     ChangeForm((prev) => ({
@@ -17,6 +24,7 @@ const Login = () => {
 
   const submitForm = (e) => {
     e.preventDefault();
+    login(loginForm);
   };
 
   return (
@@ -56,18 +64,18 @@ const Login = () => {
                     htmlFor="username"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Username or Email
+                    Email
                   </label>
                   <div className="mt-1">
                     <input
-                      id="username"
-                      name="username"
+                      id="email"
+                      name="email"
                       type="text"
                       onChange={handleForm}
-                      value={loginForm.username}
+                      value={loginForm.email}
                       required
                       className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      placeholder="Enter your username or email"
+                      placeholder="Enter your email"
                     />
                   </div>
                 </div>
@@ -127,6 +135,7 @@ const Login = () => {
                     Sign in
                   </button>
                 </div>
+                {loginError && <p>Error: {loginError.message}</p>}
               </form>
 
               <div className="mt-6 relative z-10">
@@ -200,13 +209,12 @@ const Login = () => {
               <div className="mt-6 text-center relative z-10">
                 <p className="text-sm text-gray-600">
                   Don't have an account?
-                  <Link to="/register">
-                    <a
-                      id="signup-link"
-                      className="font-medium text-indigo-600 hover:text-indigo-500"
-                    >
-                      Sign up
-                    </a>
+                  <Link
+                    to="/register"
+                    id="signup-link"
+                    className="font-medium text-indigo-600 hover:text-indigo-500"
+                  >
+                    Sign up
                   </Link>
                 </p>
               </div>
