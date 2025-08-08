@@ -13,21 +13,37 @@ async def login_user(request: Request):
     body = await request.json()
     url = f"{AUTH_SERVICE_URL}/login"
     response = await forward_request("POST", url, json=body)
+    
+    if(response.is_error):
+        return JSONResponse(
+            {"error": f"Invalid response from Auth service: {response.text}"},
+            status_code=response.status_code
+        )
     data = response.json()
-    return {"data":data, "status_code":response.status_code}
+    return JSONResponse({"data":data}, status_code=200)
 
 
 @router.post("/register")
 async def register_user(request: Request):
     body = await request.json()
     url = f"{AUTH_SERVICE_URL}/register"
-    response = await forward_request("POST", url, json=body)
+    response = await forward_request("POST", url, json=body) 
+    if(response.is_error):
+        return JSONResponse(
+            {"error": f"Invalid response from Auth service: {response.text}"},
+            status_code=response.status_code
+        )
     data = response.json()
-    return {"data":data, "status_code":response.status_code}
+    return JSONResponse({"data":data}, status_code=201)
 
 @router.get("/me")
 async def get_current_user(request: Request, token_data=Depends(verify_jwt_token)):
     url = f"{AUTH_SERVICE_URL}/me"
     response = await forward_request("GET", url, headers=request.headers)
+    if(response.is_error):
+        return JSONResponse(
+            {"error": f"Invalid response from Auth service: {response.text}"},
+            status_code=response.status_code
+        )
     data = response.json()
-    return {"data":data, "status_code":response.status_code}
+    return JSONResponse({"data":data}, status_code=200)
