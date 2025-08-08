@@ -5,7 +5,7 @@ export async function handleRequest<T>(
   method: string = "GET",
   token?: string | null,
   body?: any
-): Promise<T | null> {
+): Promise<T> {
   try {
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
@@ -18,25 +18,21 @@ export async function handleRequest<T>(
     const options: RequestInit = {
       method,
       headers,
+      body: body ? JSON.stringify(body) : null,
     };
-
-    if (body && (method === "POST" || method === "PUT" || method === "PATCH")) {
-      options.body = JSON.stringify(body);
-    }
 
     const response = await fetch(url, options);
 
+    const json = await response.json();
+
     if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(
-        `HTTP error! Status: ${response.status}, Message: ${errorText}`
-      );
+      // Throwing error here is crucial for React Query to catch it
+      throw new Error(json?.error || json.statusText || "Request failed");
     }
 
-    const data: T = await response.json();
-    return data;
+    return json;
   } catch (error) {
     console.error("Error fetching data: ", error);
-    return null;
+    throw error;
   }
 }

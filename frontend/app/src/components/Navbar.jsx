@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../utils/hooks";
 import { Menu, X } from "lucide-react";
@@ -7,6 +7,10 @@ function Navbar() {
   const { isAuthenticated, logout } = useAuth();
   const [auth, setAuth] = useState(isAuthenticated);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  useEffect(() => {
+    setAuth(isAuthenticated);
+  }, [isAuthenticated]);
 
   const logoutHandler = () => {
     logout();

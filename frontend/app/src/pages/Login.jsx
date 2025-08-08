@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import Decorators from "../components/Decorators";
 import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../utils/hooks";
+import { ClipLoader } from "react-spinners";
+import { toast } from "react-toastify";
 
 const Login = () => {
-  const { login, loginError, isAuthenticated, user, logout } = useAuth();
+  const { login, loginError, isAuthenticated, isLoading } = useAuth();
 
   const [loginForm, ChangeForm] = useState({
     email: "",
@@ -130,12 +132,13 @@ const Login = () => {
                 <div>
                   <button
                     type="submit"
-                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-indigo-500 to-indigo-600 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 "
+                    className={`${
+                      isLoading ? "cursor-not-allowed" : ""
+                    } w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-indigo-500 to-indigo-600 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 `}
                   >
-                    Sign in
+                    {!isLoading ? "Sign in" : <ClipLoader />}
                   </button>
                 </div>
-                {loginError && <p>Error: {loginError.message}</p>}
               </form>
 
               <div className="mt-6 relative z-10">

@@ -27,10 +27,14 @@ async def forward_request(method, url, headers=None, json=None, params=None):
         if method.upper() != "GET" and json is not None:
             request_['json'] = json
 
-        print("METHOD:", method)
-        print("URL:", url)
-        print("HEADERS:", headers)
-        print("JSON:", json)  
+        print(f"[Forwarding] {method} {url}")
+        print(f"[Headers] {cleaned_headers}")
+        if json:
+            print(f"[Payload] {json}")  
 
-        response = await client.request(**request_)
-        return response
+        try:
+            response = await client.request(**request_)
+            return response
+        except httpx.HTTPStatusError as exc:
+            print(f"Error response {exc.response.status_code}: {exc.response.text}")
+            return exc.response  # Forward the actual response

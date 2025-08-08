@@ -1,6 +1,7 @@
 from passlib.context import CryptContext
 from pydantic import EmailStr
 from sqlalchemy import select
+from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from app import models
 

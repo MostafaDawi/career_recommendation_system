@@ -6,7 +6,7 @@ app = FastAPI(title="API Gateway")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # or ["*"] for development
+    allow_origins=["*"],  # or ["*"] for development
     allow_credentials=True,
     allow_methods=["*"],  # or ["GET", "POST", "PUT", "DELETE"]
     allow_headers=["*"],  # or ["Authorization", "Content-Type"]
