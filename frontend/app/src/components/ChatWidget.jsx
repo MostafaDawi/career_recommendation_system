@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./ChatWidget.css"; // add the CSS snippet below or convert to Tailwind
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000/chatbot";
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
@@ -34,7 +34,7 @@ export default function ChatWidget() {
       setMessages([
         {
           sender: "bot",
-            text: "Hi! I’m CareerCompass AI. Ask me anything about CareerCompass AI.",
+          text: "Hi! I’m CareerCompass AI. Ask me anything about CareerCompass AI.",
         },
       ]);
     }
@@ -89,7 +89,7 @@ export default function ChatWidget() {
     setLoading(true);
 
     try {
-      const res = await fetch(`${API_URL}/faq`, {
+      const res = await fetch(`${API_URL}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: text }),
