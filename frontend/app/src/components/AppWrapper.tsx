@@ -29,7 +29,7 @@ function AppWrapper() {
 
   const handleRestart = () => {
     setMbtiType(null);
-    navigate("/");
+    navigate("/quiz");
   };
 
   return (

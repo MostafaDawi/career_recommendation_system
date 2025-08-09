@@ -1,10 +1,16 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import Decorators from "../components/Decorators";
+import { useAuth } from "../utils/hooks";
+import { toast } from "react-toastify";
+import { ClipLoader } from "react-spinners";
 
 const Register = () => {
+  const { register, isLoading } = useAuth();
+
   const [registerForm, ChangeForm] = useState({
-    username: "",
+    name: "",
+    email: "",
     password: "",
     confirm: "",
   });
@@ -16,7 +22,14 @@ const Register = () => {
     }));
   };
 
-  const submitForm = () => {};
+  const submitForm = async (e) => {
+    e.preventDefault();
+    if (registerForm.password !== registerForm.confirm) {
+      return toast.error("Passwords do not match", { autoClose: 5000 });
+    }
+    const { name, email, password } = registerForm;
+    register({ name, email, password });
+  };
 
   return (
     // <!-- Register Page -->
@@ -52,21 +65,42 @@ const Register = () => {
               >
                 <div>
                   <label
-                    htmlFor="username"
+                    htmlFor="name"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Username or Email
+                    Name
                   </label>
                   <div className="mt-1">
                     <input
-                      id="username"
-                      name="username"
+                      id="name"
+                      name="name"
                       type="text"
-                      value={registerForm.username}
+                      value={registerForm.name}
                       onChange={handleForm}
                       required
                       className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      placeholder="Enter your username or email"
+                      placeholder="Enter your name"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Email
+                  </label>
+                  <div className="mt-1">
+                    <input
+                      id="email"
+                      name="email"
+                      type="text"
+                      value={registerForm.email}
+                      onChange={handleForm}
+                      required
+                      className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      placeholder="Enter your email"
                     />
                   </div>
                 </div>
@@ -116,9 +150,11 @@ const Register = () => {
                 <div className="pt-2">
                   <button
                     type="submit"
-                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-indigo-500 to-indigo-600 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 bg-indigo-600"
+                    className={`${
+                      isLoading ? "cursor-not-allowed" : ""
+                    } w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-indigo-500 to-indigo-600 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 bg-indigo-600`}
                   >
-                    Sign Up
+                    {!isLoading ? "Sign Up" : <ClipLoader />}
                   </button>
                 </div>
               </form>
@@ -194,14 +230,12 @@ const Register = () => {
               <div className="mt-6 text-center relative z-10">
                 <p className="text-sm text-gray-600">
                   Already have an account?
-                  <Link to="/login">
-                    <a
-                      id="signup-link"
-                      href="#"
-                      className="font-medium text-indigo-600 hover:text-indigo-500"
-                    >
-                      Sign in
-                    </a>
+                  <Link
+                    to="/login"
+                    id="signup-link"
+                    className="font-medium text-indigo-600 hover:text-indigo-500"
+                  >
+                    Sign in
                   </Link>
                 </p>
               </div>
