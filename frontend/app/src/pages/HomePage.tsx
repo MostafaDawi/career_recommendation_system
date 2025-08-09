@@ -100,8 +100,8 @@ const HeroSection: React.FC<HomePageProps> = ({ onStartQuiz }) => (
         <div className="md:w-1/2 flex justify-center">
           <div className="relative floating-ai">
             <img
-              src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/754edd76-1066-4a61-8bfc-3f52912a7ff7.png"
-              alt="AI interface with career paths"
+              src="https://img.freepik.com/premium-vector/people-with-recommendation-vector-concept_118813-16990.jpg"
+              alt="career guidance"
               className="rounded-lg shadow-2xl"
             />
             <div className="absolute -bottom-5 -right-5 bg-white p-4 rounded-lg shadow-lg">
@@ -466,6 +466,8 @@ const TestimonialsSection = () => {
   );
 };
 
+// REMOVE THIS SECTION
+// REPLACED WITH THE CHATBOT
 const FAQSection = () => {
   // Basic accordion functionality can be added with state
   return (

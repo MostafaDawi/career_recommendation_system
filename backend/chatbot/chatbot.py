@@ -28,10 +28,10 @@ faq = {
         "Yes, our basic career recommendation tool is free for all users.",
     
     "Will my information be kept private?": 
-        "Yes, your data is encrypted and stored securely. We never share it without your consent, and you can request deletion anytime.",
+        "Your data is encrypted and stored securely. We never share it without your consent, and you can request deletion anytime.",
     
     "Do you sell my data?": 
-        "No. We do not sell your data. Your privacy is a top priority.",
+        "We do not sell your data. Your privacy is a top priority.",
     
     "How do you match me with jobs?": 
         "We use AI to analyze your personality, skills, values, and interests. It compares them against a database of career paths and job roles to find the best fit.",

@@ -37,7 +37,7 @@ const Recommendations = () => {
       title: "UX/UI Designer",
       compatibility: "85%",
       description:
-        "Create beautiful and intuitive user experiences that delight millions of users worldwide. Perfect for creative problem-solvers.",
+        "Create beautiful and intuitive user experiences for millions of users worldwide. Perfect for creative problem-solvers.",
       icon: (
         <svg
           className="w-10 h-10 text-white"
