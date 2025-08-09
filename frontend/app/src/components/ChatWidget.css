@@ -9,13 +9,13 @@
 
 /* Floating circular button */
 .chat-toggle {
-  width: 56px;
-  height: 56px;
+  width: 80px;
+  height: 70px;
   border-radius: 9999px;
-  background: #8B5CF6; /* violet */
+  background: #9574e3; 
   color: white;
-  border: none;
-  box-shadow: 0 8px 20px rgba(139,92,246,0.25);
+  border: white;
+  box-shadow: 0 8px 20px #343337;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -35,7 +35,7 @@
   display: flex;
   flex-direction: column;
   position: absolute;
-  bottom: 76px; /* above the toggle */
+  bottom: 80px; /* above the toggle */
   right: 0;
   border-radius: 12px;
   overflow: hidden;
@@ -62,7 +62,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 14px;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgb(224, 226, 247);
   backdrop-filter: blur(6px);
 }
 .chat-title {

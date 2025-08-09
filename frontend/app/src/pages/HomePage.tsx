@@ -1,3 +1,4 @@
+import { useState } from 'react';
 interface HomePageProps {
   onStartQuiz: () => void;
 }
@@ -92,9 +93,12 @@ const HeroSection: React.FC<HomePageProps> = ({ onStartQuiz }) => (
             >
               Start Free Assessment
             </button>
-            <button className="border border-white text-white px-6 py-3 rounded-md font-semibold hover:bg-white hover:text-indigo-600 transition duration-300">
+            <a
+              href="#features"
+              className="border border-white text-white px-6 py-3 rounded-md font-semibold hover:bg-white hover:text-indigo-600 transition duration-300 inline-block"
+            >
               How It Works
-            </button>
+            </a>
           </div>
         </div>
         <div className="md:w-1/2 flex justify-center">
@@ -290,10 +294,16 @@ const AssessmentSection: React.FC<HomePageProps> = ({ onStartQuiz }) => (
         </div>
         <div className="lg:w-1/2">
           <div className="bg-gray-50 p-8 rounded-xl lg:ml-8">
-            <h3 className="text-xl font-semibold text-center text-gray-800">
-              Preview the Experience
-            </h3>
-          </div>
+        <h3 className="text-xl font-semibold text-center text-gray-800">
+          Preview the Experience
+        </h3>
+        <video
+          src="/videos/demo.mp4" // put this file in your public/videos folder
+          controls
+          className="mt-4 rounded-lg w-full"
+        />
+      </div>
+
         </div>
       </div>
     </div>
@@ -466,22 +476,77 @@ const TestimonialsSection = () => {
   );
 };
 
-// REMOVE THIS SECTION
-// REPLACED WITH THE CHATBOT
+
 const FAQSection = () => {
-  // Basic accordion functionality can be added with state
+  const [openFAQ, setOpenFAQ] = useState(null);
+
+  const faqs = [
+    {
+      question: "How accurate are the AI career recommendations?",
+      answer: "Our AI achieves 97% accuracy by analyzing your skills, personality traits, interests, and current market trends."
+    },
+    {
+      question: "Is the career assessment really free?",
+      answer: "Yes! Our comprehensive career assessment is completely free with no hidden costs. You'll receive personalized recommendations at no charge."
+    },
+    {
+      question: "How long does it take to complete?",
+      answer: "The assessment takes 5-10 minutes. We've designed it to be comprehensive yet efficient with smart questions."
+    }
+  ];
+
   return (
     <section className="py-20 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            Frequently Asked Questions
+            Quick Answers
           </h2>
-        </div>
-        <div className="max-w-3xl mx-auto">
-          <p className="text-center text-gray-600">
-            Answers to common questions will be displayed here.
+          <p className="text-lg text-gray-600">
+            Have more questions? Our AI chatbot is ready to help.
           </p>
+        </div>
+
+        <div className="space-y-4 mb-12">
+          {faqs.map((faq, index) => (
+            <div key={index} className="bg-white rounded-xl shadow-sm overflow-hidden">
+              <button
+                onClick={() => setOpenFAQ(openFAQ === index ? null : index)}
+                className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors duration-200"
+              >
+                <h3 className="text-lg font-semibold text-gray-900">
+                  {faq.question}
+                </h3>
+                <svg
+                  className={`w-5 h-5 text-gray-400 transform transition-transform duration-200 ${
+                    openFAQ === index ? 'rotate-180' : ''
+                  }`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {openFAQ === index && (
+                <div className="px-6 pb-4 border-t border-gray-100">
+                  <p className="text-gray-600 pt-4">
+                    {faq.answer}
+                  </p>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div className="text-center">
+          <div className="bg-indigo-600 rounded-xl p-8 text-white">
+            <h3 className="text-xl font-bold mb-2">Need More Help?</h3>
+            <p className="text-indigo-200 mb-4">
+              Chat with our AI assistant for personalized answers
+            </p>
+          
+          </div>
         </div>
       </div>
     </section>
