@@ -29,7 +29,7 @@ const CareerModal = ({ career, onClose }) => {
   const roadmaps = {
     fullstack: 'https://roadmap.sh/full-stack',
     ux: 'https://roadmap.sh/ux-design',
-    data: 'https://roadmap.sh/data-science'
+    data: 'https://roadmap.sh/ai-data-scientist'
   };
 
   return (

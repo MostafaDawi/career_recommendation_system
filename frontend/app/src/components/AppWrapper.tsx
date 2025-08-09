@@ -10,6 +10,9 @@ import ResultsPage from "../pages/ResultsPage.js";
 import HomePage from "../pages/HomePage.js";
 import RecommendLayout from "../layouts/RecommendLayout.js";
 
+//chatbot imports
+import ChatWidget from "./ChatWidget.jsx" ;
+
 function AppWrapper() {
   const [page, setPage] = useState("home"); // 'home', 'quiz', 'results'
   const [mbtiType, setMbtiType] = useState<string | null>(null);
@@ -57,6 +60,8 @@ function AppWrapper() {
         </Route>
         {/* Add more routes here */}
       </Routes>
+      {/* persistent chat widget (stays mounted across navigation) */}
+      <ChatWidget />
     </>
   );
 }
