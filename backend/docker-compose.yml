@@ -86,14 +86,14 @@ services:
     depends_on:
       - qdrant
 
-  # chatbot_service:
-  #   build: ./chatbot
-  #   restart: always
-  #   ports:
-  #     - "8006:8006"
-  #   volumes:
-  #     - ./chatbot:/app
-  #   command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8006"]
+  chatbot_service:
+    build: ./chatbot
+    restart: always
+    ports:
+      - "8006:8006"
+    volumes:
+      - ./chatbot:/app
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8006"]
 
 volumes:
   pgdata:
