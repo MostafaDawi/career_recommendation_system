@@ -9,10 +9,12 @@ const CareerCard = ({ career, onClick, isTopMatch = false }) => {
     >
       <div className="text-center">
         <div
-          className={`${isTopMatch ? "w-24 h-24" : "w-20 h-20"} 
-          bg-gradient-to-br ${
-            career.color
-          } mx-auto mb-6 rounded-2xl flex items-center justify-center`}
+          className={`${
+            isTopMatch
+              ? "bg-white bg-opacity-20 w-24 h-24"
+              : "bg-gradient-to-br " + career.color + " w-20 h-20"
+          } 
+          mx-auto mb-6 rounded-2xl flex items-center justify-center`}
         >
           {career.icon}
         </div>
@@ -32,9 +34,11 @@ const CareerCard = ({ career, onClick, isTopMatch = false }) => {
         </p>
         <div
           className={`inline-flex items-center ${
-            isTopMatch ? "px-6 py-3 rounded-full font-semibold" : "px-4 py-2"
-          } bg-gradient-to-r ${career.color}
-                 text-white rounded-full text-sm font-semibold"
+            isTopMatch
+              ? "px-6 py-3 bg-white bg-opacity-20 rounded-full font-semibold"
+              : "px-4 py-2 bg-gradient-to-r " +
+                career.color +
+                " text-white rounded-full text-sm font-semibold"
           }`}
         >
           {isTopMatch
