@@ -253,7 +253,7 @@ const JobPage = () => {
   };
 
   return (
-    <div className="main-content pt-12">
+    <div className="main-content">
       <div className="container">
         <div className="filters-card">
           <h3 className="filters-title">Filter Jobs</h3>
