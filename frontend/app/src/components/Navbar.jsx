@@ -96,7 +96,7 @@ function Navbar() {
             )}
           </div>
           {/* Mobile Menu Button */}
-          <div className="flex items-center justify-between px-4 py-2 sm:hidden">
+          <div className="sm:hidden flex items-center justify-between px-4 py-2 ">
             <button
               onClick={() => setIsDrawerOpen((isDrawerOpen) => !isDrawerOpen)}
               className="text-gray-600 focus:outline-none"
