@@ -31,7 +31,7 @@ async def get_recommendations(user: UserProfile):
             match_response.raise_for_status()
             jobs = match_response.json().get("results")
 
-        return {"recommendations": jobs}
+        return jobs
 
     except HTTPException as e:
         raise HTTPException(status_code=500, detail=str(e))

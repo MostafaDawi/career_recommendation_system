@@ -28,16 +28,26 @@ interface RegisterResponse {
   };
 }
 
+interface userInfo {
+  id: any;
+  name: string;
+  email: string;
+  skills: Array<string>;
+  interests: Array<string>;
+  description: string;
+  personality: Record<string, any>;
+}
+
 interface UserResponse {
-  data: object;
+  data: userInfo;
   status_code: number;
 }
 
 interface UserProfileInput {
-  skills: [string];
-  interests: [string];
+  skills: Array<string>;
+  interests: Array<string>;
   description: string;
-  personality: object;
+  personality: Record<string, any>;
 }
 
 export function useAuth() {
@@ -102,6 +112,30 @@ export function useAuth() {
     enabled: !!getToken(),
   });
 
+  // Update user profile
+  const updateProfileMutation = useMutation({
+    mutationFn: (user_input: UserProfileInput | null) =>
+      handleRequest<UserResponse>(
+        "http://localhost:8000/user/me",
+        "PUT",
+        getToken(),
+        user_input
+      ),
+    onSuccess: (response: UserResponse) => {
+      toast.success(
+        `User profile was updated successfully! Data: ${response?.data?.email}`,
+        {
+          autoClose: 5000,
+        }
+      );
+    },
+    onError: (error: any) => {
+      toast.error(`User profile update failed: ${error?.detail}`, {
+        autoClose: 5000,
+      });
+    },
+  });
+
   // Logs user out
   const logout = () => {
     clearToken();
@@ -118,6 +152,8 @@ export function useAuth() {
     logout,
     register: registerMutation.mutate,
     registerError: registerMutation.error,
+    updateUser: updateProfileMutation.mutate,
+    updateUserError: updateProfileMutation.error,
     isAuthenticated: !!userQuery.data,
   };
 }
