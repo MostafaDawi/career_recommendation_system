@@ -46,4 +46,4 @@ async def get_current_user(request: Request, token_data=Depends(verify_jwt_token
             status_code=response.status_code
         )
     data = response.json()
-    return JSONResponse({"data":data}, status_code=200)
+    return {"data":data, "status_code":200}

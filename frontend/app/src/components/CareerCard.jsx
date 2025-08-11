@@ -21,7 +21,7 @@ const CareerCard = ({ career, onClick, isTopMatch = false }) => {
         <h2
           className={`${isTopMatch ? "text-3xl" : "text-2xl"} font-bold mb-4`}
         >
-          {career.title}
+          {career.job_title}
         </h2>
         <p
           className={`${
@@ -43,7 +43,7 @@ const CareerCard = ({ career, onClick, isTopMatch = false }) => {
         >
           {isTopMatch
             ? "Click to explore this path →"
-            : `${career.compatibility} Match • Explore →`}
+            : `${(career.score * 100).toFixed(0)}% Match • Explore →`}
         </div>
       </div>
     </div>
