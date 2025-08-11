@@ -18,9 +18,10 @@ import QuizPage from "../pages/QuizPage.js";
 import ProfilePage from "../pages/ProfilePage.js";
 import AboutPage from "../pages/AboutPage.js";
 import ContactPage from "../pages/ContactPage.js";
+import { useAuth } from "../utils/hooks.js";
 
 function AppWrapper() {
-  const [page, setPage] = useState("home"); // 'home', 'quiz', 'results'
+  const { logout } = useAuth();
   const [mbtiType, setMbtiType] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -44,6 +45,10 @@ function AppWrapper() {
     message: string;
   }) => {
     console.log(`Complaint: ${data.name} , ${data.email}, ${data.message}`);
+  };
+
+  const logoutApp = () => {
+    logout();
   };
 
   return (
@@ -77,7 +82,10 @@ function AppWrapper() {
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/profile" element={<ProfilePage />} />
+          <Route
+            path="/profile"
+            element={<ProfilePage onLogout={logoutApp} />}
+          />
         </Route>
         {/* Add more routes here */}
       </Routes>
