@@ -65,10 +65,10 @@ function Navbar() {
                 Quiz
               </Link>
               <Link
-                href="#testimonials"
+                to="/job"
                 className="nav-link border-transparent text-gray-600 hover:text-indigo-600 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
               >
-                Testimonials
+                Job
               </Link>
             </div>
           </div>
@@ -141,13 +141,13 @@ function Navbar() {
           >
             Quiz
           </Link>
-          <a
-            href="#testimonials"
+          <Link
+            to="/job"
             onClick={closeDrawer}
             className="text-gray-700 hover:text-indigo-600"
           >
-            Testimonials
-          </a>
+            Job
+          </Link>
           {!auth ? (
             <Link to="/login" onClick={closeDrawer}>
               <button className="mt-4 px-4 py-2 w-full text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md">

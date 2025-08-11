@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import CookieConsent from "../components/common/CookieConsent.js";
 import { Outlet } from "react-router-dom";
 
 const MainLayout = () => {
@@ -11,6 +12,7 @@ const MainLayout = () => {
         <Outlet />
       </main>
       <Footer />
+      <CookieConsent />
     </>
   );
 };
