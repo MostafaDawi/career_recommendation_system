@@ -32,91 +32,91 @@ const JobClockIcon = () => (
   </svg>
 );
 
-const JobPage = () => {
-  const initialJobs = [
-    {
-      id: "1",
-      title: "Senior Frontend Developer",
-      description:
-        "We are looking for an experienced Frontend Developer to join our dynamic team. You will be responsible for building user-facing features using modern JavaScript frameworks, ensuring high performance and responsive design across various devices and browsers. Work with React, TypeScript, and modern development tools in an agile environment.",
-      salary: 95000,
-      location: "San Francisco, CA",
-      tags: ["React", "TypeScript", "CSS", "JavaScript", "Redux"],
-    },
-    {
-      id: "2",
-      title: "Data Scientist",
-      description:
-        "Join our data science team to extract insights from large datasets, build predictive models, and help drive data-driven decision making across the organization. You'll work with machine learning algorithms, statistical analysis, and big data technologies to solve complex business problems.",
-      salary: 110000,
-      location: "New York, NY",
-      tags: ["Python", "Machine Learning", "SQL", "TensorFlow", "Statistics"],
-    },
-    {
-      id: "3",
-      title: "UX/UI Designer",
-      description:
-        "Create beautiful and intuitive user experiences for our web and mobile applications. Collaborate with product managers and developers to design user interfaces that are both functional and aesthetically pleasing. Experience with design systems and user research methodologies preferred.",
-      salary: 85000,
-      location: "Austin, TX",
-      tags: ["Figma", "Adobe Creative Suite", "Prototyping", "User Research"],
-    },
-    {
-      id: "1",
-      title: "Senior Frontend Developer",
-      description:
-        "We are looking for an experienced Frontend Developer to join our dynamic team. You will be responsible for building user-facing features using modern JavaScript frameworks, ensuring high performance and responsive design across various devices and browsers. Work with React, TypeScript, and modern development tools in an agile environment.",
-      salary: 95000,
-      location: "San Francisco, CA",
-      tags: ["React", "TypeScript", "CSS", "JavaScript", "Redux"],
-    },
-    {
-      id: "2",
-      title: "Data Scientist",
-      description:
-        "Join our data science team to extract insights from large datasets, build predictive models, and help drive data-driven decision making across the organization. You'll work with machine learning algorithms, statistical analysis, and big data technologies to solve complex business problems.",
-      salary: 110000,
-      location: "New York, NY",
-      tags: ["Python", "Machine Learning", "SQL", "TensorFlow", "Statistics"],
-    },
-    {
-      id: "3",
-      title: "UX/UI Designer",
-      description:
-        "Create beautiful and intuitive user experiences for our web and mobile applications. Collaborate with product managers and developers to design user interfaces that are both functional and aesthetically pleasing. Experience with design systems and user research methodologies preferred.",
-      salary: 85000,
-      location: "Austin, TX",
-      tags: ["Figma", "Adobe Creative Suite", "Prototyping", "User Research"],
-    },
-    {
-      id: "1",
-      title: "Senior Frontend Developer",
-      description:
-        "We are looking for an experienced Frontend Developer to join our dynamic team. You will be responsible for building user-facing features using modern JavaScript frameworks, ensuring high performance and responsive design across various devices and browsers. Work with React, TypeScript, and modern development tools in an agile environment.",
-      salary: 95000,
-      location: "San Francisco, CA",
-      tags: ["React", "TypeScript", "CSS", "JavaScript", "Redux"],
-    },
-    {
-      id: "2",
-      title: "Data Scientist",
-      description:
-        "Join our data science team to extract insights from large datasets, build predictive models, and help drive data-driven decision making across the organization. You'll work with machine learning algorithms, statistical analysis, and big data technologies to solve complex business problems.",
-      salary: 110000,
-      location: "New York, NY",
-      tags: ["Python", "Machine Learning", "SQL", "TensorFlow", "Statistics"],
-    },
-    {
-      id: "3",
-      title: "UX/UI Designer",
-      description:
-        "Create beautiful and intuitive user experiences for our web and mobile applications. Collaborate with product managers and developers to design user interfaces that are both functional and aesthetically pleasing. Experience with design systems and user research methodologies preferred.",
-      salary: 85000,
-      location: "Austin, TX",
-      tags: ["Figma", "Adobe Creative Suite", "Prototyping", "User Research"],
-    },
-  ];
+const initialJobs = [
+  {
+    id: "1",
+    title: "Senior Frontend Developer",
+    description:
+      "We are looking for an experienced Frontend Developer to join our dynamic team. You will be responsible for building user-facing features using modern JavaScript frameworks, ensuring high performance and responsive design across various devices and browsers. Work with React, TypeScript, and modern development tools in an agile environment.",
+    salary: 95000,
+    location: "San Francisco, CA",
+    tags: ["React", "TypeScript", "CSS", "JavaScript", "Redux"],
+  },
+  {
+    id: "2",
+    title: "Data Scientist",
+    description:
+      "Join our data science team to extract insights from large datasets, build predictive models, and help drive data-driven decision making across the organization. You'll work with machine learning algorithms, statistical analysis, and big data technologies to solve complex business problems.",
+    salary: 110000,
+    location: "New York, NY",
+    tags: ["Python", "Machine Learning", "SQL", "TensorFlow", "Statistics"],
+  },
+  {
+    id: "3",
+    title: "UX/UI Designer",
+    description:
+      "Create beautiful and intuitive user experiences for our web and mobile applications. Collaborate with product managers and developers to design user interfaces that are both functional and aesthetically pleasing. Experience with design systems and user research methodologies preferred.",
+    salary: 85000,
+    location: "Austin, TX",
+    tags: ["Figma", "Adobe Creative Suite", "Prototyping", "User Research"],
+  },
+  {
+    id: "1",
+    title: "Senior Frontend Developer",
+    description:
+      "We are looking for an experienced Frontend Developer to join our dynamic team. You will be responsible for building user-facing features using modern JavaScript frameworks, ensuring high performance and responsive design across various devices and browsers. Work with React, TypeScript, and modern development tools in an agile environment.",
+    salary: 95000,
+    location: "San Francisco, CA",
+    tags: ["React", "TypeScript", "CSS", "JavaScript", "Redux"],
+  },
+  {
+    id: "2",
+    title: "Data Scientist",
+    description:
+      "Join our data science team to extract insights from large datasets, build predictive models, and help drive data-driven decision making across the organization. You'll work with machine learning algorithms, statistical analysis, and big data technologies to solve complex business problems.",
+    salary: 110000,
+    location: "New York, NY",
+    tags: ["Python", "Machine Learning", "SQL", "TensorFlow", "Statistics"],
+  },
+  {
+    id: "3",
+    title: "UX/UI Designer",
+    description:
+      "Create beautiful and intuitive user experiences for our web and mobile applications. Collaborate with product managers and developers to design user interfaces that are both functional and aesthetically pleasing. Experience with design systems and user research methodologies preferred.",
+    salary: 85000,
+    location: "Austin, TX",
+    tags: ["Figma", "Adobe Creative Suite", "Prototyping", "User Research"],
+  },
+  {
+    id: "1",
+    title: "Senior Frontend Developer",
+    description:
+      "We are looking for an experienced Frontend Developer to join our dynamic team. You will be responsible for building user-facing features using modern JavaScript frameworks, ensuring high performance and responsive design across various devices and browsers. Work with React, TypeScript, and modern development tools in an agile environment.",
+    salary: 95000,
+    location: "San Francisco, CA",
+    tags: ["React", "TypeScript", "CSS", "JavaScript", "Redux"],
+  },
+  {
+    id: "2",
+    title: "Data Scientist",
+    description:
+      "Join our data science team to extract insights from large datasets, build predictive models, and help drive data-driven decision making across the organization. You'll work with machine learning algorithms, statistical analysis, and big data technologies to solve complex business problems.",
+    salary: 110000,
+    location: "New York, NY",
+    tags: ["Python", "Machine Learning", "SQL", "TensorFlow", "Statistics"],
+  },
+  {
+    id: "3",
+    title: "UX/UI Designer",
+    description:
+      "Create beautiful and intuitive user experiences for our web and mobile applications. Collaborate with product managers and developers to design user interfaces that are both functional and aesthetically pleasing. Experience with design systems and user research methodologies preferred.",
+    salary: 85000,
+    location: "Austin, TX",
+    tags: ["Figma", "Adobe Creative Suite", "Prototyping", "User Research"],
+  },
+];
 
+const JobPage = () => {
   const jobsPerPage = 6;
 
   const [jobs, setJobs] = useState(initialJobs);
