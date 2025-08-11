@@ -33,6 +33,13 @@ interface UserResponse {
   status_code: number;
 }
 
+interface UserProfileInput {
+  skills: [string];
+  interests: [string];
+  description: string;
+  personality: object;
+}
+
 export function useAuth() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();

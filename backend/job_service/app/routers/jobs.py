@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Body, Depends, HTTPException, UploadFile, File
-from sqlalchemy import select
+from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models import Job
 from app.schemas import JobCreate, JobOut, JobOutEmbedded
@@ -138,31 +138,37 @@ async def search_jobs(
     db: AsyncSession = Depends(get_db)
 ):
     try:
-        # Set offset based on pagination
         offset = (page - 1) * limit
 
-        # Build the query
-        query = db.query(Job)
+        stmt = select(Job)
 
-        # Apply filters if they exist
+        # Build a list of filters to apply
+        filters = []
+
         if title:
-            query = query.filter(Job.title.ilike(f"%{title}%"))
+            filters.append(Job.title.ilike(f"%{title}%"))
         if location:
-            query = query.filter(Job.location.ilike(f"%{location}%"))
+            filters.append(Job.location.ilike(f"%{location}%"))
         if tags:
-            query = query.filter(Job.tags.any(tags))  # Assumes tags is a list
-        if min_salary:
-            query = query.filter(Job.salary >= min_salary)
-        if max_salary:
-            query = query.filter(Job.salary <= max_salary)
+            # Adjust this if tags is a list or string
+            # For example, if tags is a comma-separated string:
+            # tags_list = [tag.strip() for tag in tags.split(",")]
+            # For now, assuming string containment in array:
+            filters.append(Job.tags.any(tags))
+        if min_salary is not None:
+            filters.append(Job.salary >= min_salary)
+        if max_salary is not None:
+            filters.append(Job.salary <= max_salary)
 
-        # Apply pagination
-        query = query.offset(offset).limit(limit)
+        if filters:
+            stmt = stmt.where(and_(*filters))
 
-        # Execute the query and fetch results
-        result = await db.execute(query)
+        stmt = stmt.offset(offset).limit(limit)
+
+        result = await db.execute(stmt)
         jobs = result.scalars().all()
 
         return jobs
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
