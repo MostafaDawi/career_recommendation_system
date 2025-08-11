@@ -1,13 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../utils/hooks";
 import { Menu, X } from "lucide-react";
+import UserProfileIcon from "./icons/UserProfileIcon";
 
 function Navbar() {
   const { isAuthenticated, logout } = useAuth();
   const [auth, setAuth] = useState(isAuthenticated);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+  const menuRef = useRef(null);
 
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Check authentication
   useEffect(() => {
     setAuth(isAuthenticated);
   }, [isAuthenticated]);
@@ -86,13 +101,40 @@ function Navbar() {
                 </button>
               </Link>
             ) : (
-              <button
-                onClick={logoutHandler}
-                id="logout-button"
-                className="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                Log out
-              </button>
+              <div className="flex gap-2 items-center">
+                <div className="relative inline-block text-left" ref={menuRef}>
+                  {/* Icon Button */}
+                  <button
+                    onClick={() => setOpen((prev) => !prev)}
+                    className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-200 transition"
+                  >
+                    <UserProfileIcon className="w-8 h-8 text-gray-700" />
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  {open && (
+                    <div className="absolute -right-5 mt-2 w-48 bg-white rounded-lg shadow-lg px-2">
+                      <ul className="py-2 text-sm text-gray-700">
+                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                          <Link to="/profile">Profile</Link>
+                        </li>
+                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                          <Link to="/saved_quiz">Saved Quizzes</Link>
+                        </li>
+                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                          <Link to="/change_password">Change Password</Link>
+                        </li>
+                        <li
+                          onClick={logoutHandler}
+                          className="px-4 py-2 text-red-600 hover:bg-gray-100 cursor-pointer"
+                        >
+                          Logout
+                        </li>
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </div>
             )}
           </div>
           {/* Mobile Menu Button */}
@@ -155,12 +197,15 @@ function Navbar() {
               </button>
             </Link>
           ) : (
-            <button
-              onClick={logoutHandler}
-              className="mt-4 px-4 py-2 w-full text-sm font-medium text-indigo-700 bg-indigo-100 hover:bg-indigo-200 rounded-md"
-            >
-              Log out
-            </button>
+            <div className="flex gap-6">
+              <button
+                onClick={logoutHandler}
+                className="mt-4 px-4 py-2 w-full text-sm font-medium text-indigo-700 bg-indigo-100 hover:bg-indigo-200 rounded-md"
+              >
+                Log out
+              </button>
+              <UserProfileIcon />
+            </div>
           )}
         </nav>
       </div>

@@ -1,3 +1,5 @@
+import json
+from typing import List, Optional
 from fastapi import APIRouter, Request, Depends
 from fastapi.responses import JSONResponse
 from utils.jwt import verify_jwt_token
@@ -12,11 +14,11 @@ RECOMMEND_SERVICE_URL = os.getenv("RECOMMEND_SERVICE_URL", "http://localhost:800
 
 router = APIRouter(tags=["Recommendations"])
 
-@router.get("/me")
+@router.post("/me")
 async def recommend(request: Request, token_data=Depends(verify_jwt_token)):
     response = await auth.get_current_user(request=request, token_data=token_data)
     user = response.get("data")
-
+    
     request_kwargs = {
         "skills":", ".join(user['skills']),
         "description":user['description'],

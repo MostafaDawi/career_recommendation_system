@@ -1,6 +1,19 @@
+import { useEffect, useState } from "react";
+import { useAuth } from "../utils/hooks.js";
+
 interface ResultsPageProps {
   type: string | null;
   onRestart: () => void;
+}
+
+interface userInfo {
+  id: number;
+  name: string;
+  email: string;
+  skills: Array<string>;
+  interests: Array<string>;
+  description: string;
+  personality: Record<string, any>;
 }
 
 const careerRecommendations: {
@@ -209,9 +222,27 @@ const ResultsPage: React.FC<ResultsPageProps> = ({ type, onRestart }) => {
   }
 
   const { title, careers, description } = careerRecommendations[type];
+  const { isAuthenticated, user, updateUser, updateUserError } = useAuth();
+  const [userData, setUserData] = useState<userInfo | null>(user ?? null);
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      const careerObject = careers.join(" ");
+      const body = {
+        title,
+        description,
+        careerObject,
+      };
+      const updatedUser = { ...userData, personality: body };
+      setUserData(updatedUser);
+      updateUser(updatedUser);
+    }
+  }, [isAuthenticated]);
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4">
+      {updateUserError && (
+        <p className="text-red-400 font-bold">{`Error occured: ${updateUserError}`}</p>
+      )}
       <div className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl p-6 md:p-10 text-center transform transition-all duration-500 scale-95 opacity-0 animate-fade-in-up">
         <style>{`
                     @keyframes fade-in-up {
