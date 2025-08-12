@@ -36,9 +36,12 @@ async def search_query(request: schemas.SearchRequest):
     for hit in search_result:
         payload = hit.payload
         results.append({
+            "id": payload.get("job_id", None),
             "job_title": payload.get("job_title", "N/A"),
+            "description": payload.get("description", "No description yet.."),
             "company": payload.get("company", "N/A"),
             "location": payload.get("location", "N/A"),
+            "tags": payload.get("tags", "N/A"),
             "score": hit.score
         })
 

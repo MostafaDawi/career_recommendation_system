@@ -29,6 +29,7 @@ async def login(credentials: schemas.UserLogin, db: AsyncSession = Depends(datab
 
 @router.get("/me", response_model=schemas.UserOut)
 async def get_me(user: models.User = Depends(deps.get_current_user)):
+    
     return user
 
 

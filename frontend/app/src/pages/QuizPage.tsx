@@ -1,5 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import useMBTIQuiz from "../utils/useMBTIQuiz";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../utils/hooks.js";
 
 interface QuizPageProps {
   onComplete: (result: string) => void;
@@ -20,6 +22,14 @@ const QuizPage: React.FC<QuizPageProps> = ({ onComplete }) => {
   } = useMBTIQuiz(onComplete);
 
   const quizRef = useRef<HTMLDivElement>(null);
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/login");
+    }
+  }, [isAuthenticated]);
 
   useEffect(() => {
     if (isQuizComplete) {

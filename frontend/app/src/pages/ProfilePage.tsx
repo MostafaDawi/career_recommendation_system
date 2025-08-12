@@ -49,7 +49,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onLogout }) => {
       setProfile(user);
     }
   }, [isAuthenticated, user]);
-
+  console.log("Received Profile: ", profile);
   const submitForm = (e) => {
     e.preventDefault();
     updateUser(profile);

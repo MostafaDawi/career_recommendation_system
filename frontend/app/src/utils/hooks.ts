@@ -20,12 +20,14 @@ interface LoginResponse {
     access_token: string;
     token_type: string;
   };
+  status_code: number;
 }
 
 interface RegisterResponse {
   data: {
     message: string;
   };
+  status_code: number;
 }
 
 interface userInfo {
@@ -40,7 +42,7 @@ interface userInfo {
 
 interface UserResponse {
   data: userInfo;
-  status_code: number;
+  statuse_code: number;
 }
 
 interface UserProfileInput {
@@ -94,7 +96,7 @@ export function useAuth() {
       navigate("/login");
     },
     onError: (error: any) => {
-      toast.error(`Registration failed: ${error?.detail}`, {
+      toast.error(`Registration failed: ${error}`, {
         autoClose: 5000,
       });
     },
@@ -122,15 +124,13 @@ export function useAuth() {
         user_input
       ),
     onSuccess: (response: UserResponse) => {
-      toast.success(
-        `User profile was updated successfully! Data: ${response?.data?.email}`,
-        {
-          autoClose: 5000,
-        }
-      );
+      console.log(response);
+      toast.success("User profile was updated successfully!", {
+        autoClose: 5000,
+      });
     },
     onError: (error: any) => {
-      toast.error(`User profile update failed: ${error?.detail}`, {
+      toast.error(`User profile update failed: ${error?.message}`, {
         autoClose: 5000,
       });
     },

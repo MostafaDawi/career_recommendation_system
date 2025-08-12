@@ -7,6 +7,29 @@ import CareerCard from "../components/CareerCard";
 import FloatingElements from "../components/FloatingElements";
 import CareerModal from "../components/CareerModal";
 import { fetchRecommendations } from "../utils/apiFetching";
+import { ClipLoader } from "react-spinners";
+import {
+  FaLaptopCode,
+  FaDatabase,
+  FaCodeBranch,
+  FaMicrochip,
+} from "react-icons/fa";
+
+const icons = [
+  <FaLaptopCode />,
+  <FaDatabase />,
+  <FaCodeBranch />,
+  <FaMicrochip />,
+];
+
+const gradientColors = [
+  "from-pink-500 to-yellow-500",
+  "from-green-400 to-blue-500",
+  "from-purple-500 to-indigo-500",
+  "from-red-400 to-orange-500",
+  "from-cyan-400 to-sky-500",
+  "from-emerald-400 to-lime-500",
+];
 
 const Recommendations = () => {
   const [openModal, setOpenModal] = useState(null);
@@ -28,12 +51,12 @@ const Recommendations = () => {
   });
 
   useEffect(() => {
-    if (Array.isArray(recommended_jobs)) {
-      setCareers([...recommended_jobs].sort((a, b) => b.score - a.score));
+    if (Array.isArray(recommended_jobs?.data)) {
+      setCareers([...recommended_jobs?.data].sort((a, b) => b.score - a.score));
     }
   }, [user, recommended_jobs]);
 
-  if (!recommended_jobs) {
+  if (!careers) {
     return (
       <div className="min-h-screen flex flex-col justify-center items-center">
         <p className="text-lg mb-4">
@@ -49,12 +72,19 @@ const Recommendations = () => {
     );
   }
 
+  const careersWithUI = careers?.map((career) => ({
+    ...career,
+    color: gradientColors[Math.floor(Math.random() * gradientColors.length)],
+    icon: icons[Math.floor(Math.random() * icons.length)],
+  }));
+
   console.log("Retrieved Jobs: ", recommended_jobs?.data);
 
-  if (isLoading) return <div className="text-center mt-10">Loading...</div>;
   if (isError)
     return (
-      <div className="text-center mt-10 text-red-500">{error.message}</div>
+      <div className="flex justify-center items-center text-center mt-50 text-red-500">
+        {error.message}
+      </div>
     );
 
   // باقي الكود عادي
@@ -63,50 +93,64 @@ const Recommendations = () => {
       <FloatingElements />
       <div className="container mx-auto px-6 py-8 relative z-10">
         <Header />
-        <div className="max-w-6xl mx-auto">
-          {/* Top Match */}
-          {careers?.map((career) => {
-            career?.score > 0.85 ? (
-              <div key={career.id} className="mb-12">
-                (
-                <div className="text-center mb-6">
-                  <span className="inline-flex items-center px-6 py-3 bg-yellow-400 text-yellow-900 rounded-full font-bold text-lg">
-                    🏆 Perfect Match-
-                    {(career?.score * 100).toFixed(0)}% Compatibility
-                  </span>
-                </div>
+        {isLoading || recommended_jobs?.data === undefined ? (
+          <div className="flex justify-center gap-4 items-center text-center mt-5">
+            <ClipLoader />
+            Fetching Recommended Job...
+          </div>
+        ) : (
+          <div className="max-w-6xl mx-auto">
+            {/* Top Match */}
+            {careersWithUI?.map((career) => {
+              console.log(career?.score);
+              if (career?.score > 0.5) {
+                return (
+                  <div key={career.id} className="mb-12">
+                    <div className="text-center mb-6">
+                      <span className="inline-flex items-center px-6 py-3 bg-yellow-400 text-yellow-900 rounded-full font-bold text-lg">
+                        🏆 Perfect Match-
+                        {(career?.score * 100).toFixed(0)}% Compatibility
+                      </span>
+                    </div>
+
+                    <CareerCard
+                      career={career}
+                      onClick={() => setOpenModal(career.id)}
+                      isTopMatch
+                    />
+                  </div>
+                );
+              } else {
+                return "";
+              }
+            })}
+
+            {/* Other Matches */}
+            <div className="text-center mb-8">
+              <h3 className="text-2xl font-bold text-purple-800 mb-4">
+                Great Matches
+              </h3>
+              <p className="text-purple-600">
+                Explore these alternative career paths that align with your
+                skills
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+              {careersWithUI?.map((career) =>
+                career?.score < 0.5 ? (
+                  <CareerCard
+                    key={career.id}
+                    career={career}
+                    onClick={() => setOpenModal(career.id)}
+                  />
+                ) : (
+                  ""
                 )
-                <CareerCard
-                  career={career}
-                  onClick={() => setOpenModal(career.id)}
-                  isTopMatch
-                />
-              </div>
-            ) : (
-              ""
-            );
-          })}
-
-          {/* Other Matches */}
-          <div className="text-center mb-8">
-            <h3 className="text-2xl font-bold text-purple-800 mb-4">
-              Great Matches
-            </h3>
-            <p className="text-purple-600">
-              Explore these alternative career paths that align with your skills
-            </p>
+              )}
+            </div>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {careers?.map((career) => (
-              <CareerCard
-                key={career.id}
-                career={career}
-                onClick={() => setOpenModal(career.id)}
-              />
-            ))}
-          </div>
-        </div>
+        )}
       </div>
 
       {openModal && (
