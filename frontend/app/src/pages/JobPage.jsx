@@ -328,7 +328,7 @@ const JobPage = () => {
         </div>
 
         {/* Results Info */}
-        <div className="results-info">
+        <div className="results-info mb-4">
           {filteredJobs.length > 0
             ? `Showing ${(currentPage - 1) * jobsPerPage + 1}-${Math.min(
                 currentPage * jobsPerPage,
@@ -343,7 +343,7 @@ const JobPage = () => {
           {jobsToShow.map((job) => (
             <div
               key={job.id}
-              className="job-card"
+              className="job-card transform-transition duration-300 hover:scale-103"
               onClick={() => openModal(job)}
             >
               <div className="job-header">

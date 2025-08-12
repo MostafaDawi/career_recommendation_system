@@ -12,19 +12,22 @@ interface userInfo {
 }
 
 interface JobModel {
-  title: string;
+  id: any;
+  job_title: string;
   company: string;
   location: string;
   score: number;
+  tags: Array<string>;
 }
 
 interface JobList {
   data: JobModel[];
+  status_code: number;
 }
 
 export async function fetchRecommendations(
   user: userInfo
-): Promise<JobList | null> {
+): Promise<JobList | undefined> {
   const token = getToken();
   if (
     user?.description &&
@@ -34,11 +37,8 @@ export async function fetchRecommendations(
   ) {
     return handleRequest<JobList>(
       "http://localhost:8000/recommend/me",
-      "POST",
-      token,
-      user
+      "GET",
+      token
     );
-  } else {
-    return null;
   }
 }

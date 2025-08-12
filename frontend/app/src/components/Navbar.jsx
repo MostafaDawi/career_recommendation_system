@@ -115,15 +115,21 @@ function Navbar() {
                   {open && (
                     <div className="absolute -right-5 mt-2 w-48 bg-white rounded-lg shadow-lg px-2">
                       <ul className="py-2 text-sm text-gray-700">
-                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                          <Link to="/profile">Profile</Link>
-                        </li>
-                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                          <Link to="/saved_quiz">Saved Quizzes</Link>
-                        </li>
-                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                          <Link to="/change_password">Change Password</Link>
-                        </li>
+                        <Link to="/profile">
+                          <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                            Profile
+                          </li>
+                        </Link>
+                        <Link to="/saved_quiz">
+                          <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                            Saved Quizzes
+                          </li>
+                        </Link>
+                        <Link to="/change_password">
+                          <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                            Change Password
+                          </li>
+                        </Link>
                         <li
                           onClick={logoutHandler}
                           className="px-4 py-2 text-red-600 hover:bg-gray-100 cursor-pointer"

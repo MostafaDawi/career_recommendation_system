@@ -26,8 +26,14 @@ class UserUpdate(BaseModel):
     interests: Optional[List[str]] = None
     personality: Optional[dict] = None
 
-class UserOut(UserBase):
+class UserOut(BaseModel):
     id: int
+    name: str
+    email: EmailStr
+    description: Optional[str] = None
+    skills: Optional[List[str]] = []
+    interests: Optional[List[str]] = []
+    personality: Optional[dict] = None
 
     model_config = {
         "from_attributes": True

@@ -24,15 +24,16 @@ export async function handleRequest<T>(
     const response = await fetch(url, options);
 
     const json = await response.json();
+    const { password, ...sanitizedData } = json;
 
     if (!response.ok) {
       // Throwing error here is crucial for React Query to catch it
-      throw new Error(json?.error || json.statusText || "Request failed");
+      throw new Error(json?.error || json?.detail || "Request failed");
     }
-
-    return json;
+    console.log("returned data from handleRequest: ", json);
+    return json as T;
   } catch (error) {
-    console.error("Error fetching data: ", error);
+    console.error("Error: ", error?.message);
     throw error;
   }
 }

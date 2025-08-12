@@ -15,12 +15,13 @@
 .top-match-card {
   background: linear-gradient(
     135deg,
-    #684b9c,
-    #621aa4,
-    #9888a7,
-    #c697dc,
-    #8f6896
+    #2c3e75,
+    /* dark navy */ #3f51b5,
+    /* indigo */ #5c7bd9,
+    /* medium blue */ #4dd0e1,
+    /* aqua */ #1a2945 /* deep navy */
   );
+
   background-size: 400% 400%;
   animation: gradientShift 4s ease infinite;
   position: relative;
