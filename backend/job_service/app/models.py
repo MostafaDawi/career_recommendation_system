@@ -12,4 +12,7 @@ class Job(Base):
     salary = Column(Integer)
     location = Column(String)
     tags = Column(ARRAY(String))
+    jobType = Column(String)
+    companyName = Column(String)
+    contactEmail = Column(String)
     created_at = Column(DateTime(timezone=True), server_default=func.now())

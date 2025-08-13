@@ -5,6 +5,7 @@ psycopg2-binary==2.9.9
 pandas==2.2.3
 httpx==0.25.0
 pydantic==2.4.2
+pydantic[email]
 python-dotenv==1.0.0
 asyncpg==0.29.0 
 python-multipart

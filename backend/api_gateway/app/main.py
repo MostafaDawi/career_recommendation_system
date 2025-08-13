@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routes import auth, user, job, recommendation, chatbot
 
 app = FastAPI(title="API Gateway")
+app.router.redirect_slashes = False
 
 app.add_middleware(
     CORSMiddleware,
@@ -20,5 +21,5 @@ def service_running():
 app.include_router(auth.router, prefix="/auth")
 app.include_router(user.router, prefix="/user")
 app.include_router(recommendation.router, prefix="/recommend")
+app.include_router(job.router, prefix="/jobs")
 app.include_router(chatbot.router, prefix="/chatbot")
-# app.include_router(job.router, prefix="/jobs")

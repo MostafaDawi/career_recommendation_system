@@ -17,6 +17,7 @@ Base = declarative_base()
 # This function is used in app startup to create tables
 async def create_db_and_tables():
     async with engine.begin() as conn:
+        # await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
 
 # Dependency for FastAPI routes

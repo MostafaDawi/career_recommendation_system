@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 interface HomePageProps {
   onStartQuiz: () => void;
 }
@@ -78,7 +78,7 @@ const HeroSection: React.FC<HomePageProps> = ({ onStartQuiz }) => (
   <section className="gradient-bg text-white py-25">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="md:flex items-center justify-between">
-        <div className="md:w-1/2 mb-10 md:mb-0">
+        <div className="text-center md:text-left md:w-1/2 mb-10 md:mb-0">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
             Your AI-Powered Career Navigator
           </h1>
@@ -86,7 +86,7 @@ const HeroSection: React.FC<HomePageProps> = ({ onStartQuiz }) => (
             Personalized career recommendations powered by artificial
             intelligence to help you find your perfect career path.
           </p>
-          <div className="flex space-x-4">
+          <div className="flex justify-center space-x-4 sm:justify-start">
             <button
               onClick={onStartQuiz}
               className="bg-white text-indigo-600 px-6 py-3 rounded-md font-semibold hover:bg-gray-100 transition duration-300"
@@ -294,16 +294,15 @@ const AssessmentSection: React.FC<HomePageProps> = ({ onStartQuiz }) => (
         </div>
         <div className="lg:w-1/2">
           <div className="bg-gray-50 p-8 rounded-xl lg:ml-8">
-        <h3 className="text-xl font-semibold text-center text-gray-800">
-          Preview the Experience
-        </h3>
-        <video
-          src="/videos/demo.mp4" // put this file in your public/videos folder
-          controls
-          className="mt-4 rounded-lg w-full"
-        />
-      </div>
-
+            <h3 className="text-xl font-semibold text-center text-gray-800">
+              Preview the Experience
+            </h3>
+            <video
+              src="/videos/demo.mp4" // put this file in your public/videos folder
+              controls
+              className="mt-4 rounded-lg w-full"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -476,23 +475,25 @@ const TestimonialsSection = () => {
   );
 };
 
-
 const FAQSection = () => {
   const [openFAQ, setOpenFAQ] = useState(null);
 
   const faqs = [
     {
       question: "How accurate are the AI career recommendations?",
-      answer: "Our AI achieves 97% accuracy by analyzing your skills, personality traits, interests, and current market trends."
+      answer:
+        "Our AI achieves 97% accuracy by analyzing your skills, personality traits, interests, and current market trends.",
     },
     {
       question: "Is the career assessment really free?",
-      answer: "Yes! Our comprehensive career assessment is completely free with no hidden costs. You'll receive personalized recommendations at no charge."
+      answer:
+        "Yes! Our comprehensive career assessment is completely free with no hidden costs. You'll receive personalized recommendations at no charge.",
     },
     {
       question: "How long does it take to complete?",
-      answer: "The assessment takes 5-10 minutes. We've designed it to be comprehensive yet efficient with smart questions."
-    }
+      answer:
+        "The assessment takes 5-10 minutes. We've designed it to be comprehensive yet efficient with smart questions.",
+    },
   ];
 
   return (
@@ -509,7 +510,10 @@ const FAQSection = () => {
 
         <div className="space-y-4 mb-12">
           {faqs.map((faq, index) => (
-            <div key={index} className="bg-white rounded-xl shadow-sm overflow-hidden">
+            <div
+              key={index}
+              className="bg-white rounded-xl shadow-sm overflow-hidden"
+            >
               <button
                 onClick={() => setOpenFAQ(openFAQ === index ? null : index)}
                 className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors duration-200"
@@ -519,20 +523,23 @@ const FAQSection = () => {
                 </h3>
                 <svg
                   className={`w-5 h-5 text-gray-400 transform transition-transform duration-200 ${
-                    openFAQ === index ? 'rotate-180' : ''
+                    openFAQ === index ? "rotate-180" : ""
                   }`}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M19 9l-7 7-7-7"
+                  />
                 </svg>
               </button>
               {openFAQ === index && (
                 <div className="px-6 pb-4 border-t border-gray-100">
-                  <p className="text-gray-600 pt-4">
-                    {faq.answer}
-                  </p>
+                  <p className="text-gray-600 pt-4">{faq.answer}</p>
                 </div>
               )}
             </div>
@@ -545,7 +552,6 @@ const FAQSection = () => {
             <p className="text-indigo-200 mb-4">
               Chat with our AI assistant for personalized answers
             </p>
-          
           </div>
         </div>
       </div>

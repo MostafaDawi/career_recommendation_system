@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import "../pages/jobs.css";
+import { useJobs } from "../utils/hooks";
 
 // Add Job Modal Component
 const AddJobModal = ({ onAddJob, onClose }) => {
@@ -15,6 +16,9 @@ const AddJobModal = ({ onAddJob, onClose }) => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const skillInputRef = useRef(null);
+
+  // Adding new job state
+  const { createJob, createJobError } = useJobs();
 
   const addSkill = () => {
     const skill = skillInput.trim();
@@ -51,7 +55,9 @@ const AddJobModal = ({ onAddJob, onClose }) => {
       companyName,
     };
 
+    createJob(newJob);
     onAddJob(newJob);
+    console.log("Added New Job");
     onClose();
   };
 

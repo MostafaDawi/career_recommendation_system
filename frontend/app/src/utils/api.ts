@@ -4,7 +4,7 @@ export async function handleRequest<T>(
   url: string,
   method: string = "GET",
   token?: string | null,
-  body?: any
+  body?: any | null
 ): Promise<T> {
   try {
     const headers: Record<string, string> = {
@@ -24,7 +24,6 @@ export async function handleRequest<T>(
     const response = await fetch(url, options);
 
     const json = await response.json();
-    const { password, ...sanitizedData } = json;
 
     if (!response.ok) {
       // Throwing error here is crucial for React Query to catch it
