@@ -1,10 +1,10 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.concurrency import asynccontextmanager
 from pydantic import BaseModel
-from app import schemas  # <- your defined Pydantic models
+from app import schemas
 from app.qdrant_service import client, collection_name, create_collection, EMBEDDING_DIMENSIONALITY  # from qdrant_client.py
 from app.util import send_to_embedding_service
-from qdrant_client.http.models import PointStruct, Filter, FieldCondition, MatchValue
+from qdrant_client.http.models import PointStruct, Filter, FieldCondition, MatchValue, FilterSelector
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -36,9 +36,15 @@ async def search_query(request: schemas.SearchRequest):
     for hit in search_result:
         payload = hit.payload
         results.append({
+            "id": payload.get("job_id", None),
             "job_title": payload.get("job_title", "N/A"),
+            "description": payload.get("description", "No description yet.."),
             "company": payload.get("company", "N/A"),
             "location": payload.get("location", "N/A"),
+            "tags": payload.get("tags", "N/A"),
+            "companyName":payload.get("companyName", "N/A"),
+            "jobType":payload.get("jobType", "N/A"),
+            "contactEmail":payload.get("contactEmail", "N/A"),
             "score": hit.score
         })
 
@@ -59,6 +65,9 @@ async def store_vector(job: schemas.JobPosting_v2):
             "salary": job.salary,
             "location": job.location,
             "tags": job.tags,
+            "companyName":job.companyName,
+            "jobType":job.jobType,
+            "contactEmail":job.contactEmail
         }
     )
 
@@ -66,5 +75,11 @@ async def store_vector(job: schemas.JobPosting_v2):
         collection_name=collection_name,
         points=[point]
     )
-
     return {"status": "success", "job_id": job.id}
+
+@app.delete("/delete_all")
+async def delete_all_rows():
+    # Delete all points
+    client.delete_collection(collection_name=collection_name)
+
+    print(f"Collection {collection_name} was deleted successfully!")

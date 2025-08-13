@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from typing import List, Optional
 from uuid import UUID
 
@@ -9,6 +9,9 @@ class JobCreate(BaseModel):
     salary: Optional[int] = None
     location: Optional[str] = None
     tags: Optional[List[str]] = None
+    jobType: Optional[str] = None
+    companyName: Optional[str] = None
+    contactEmail: Optional[EmailStr] = None
 
 # Response schema
 class JobOut(JobCreate):

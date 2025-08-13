@@ -6,7 +6,7 @@ import os
 
 load_dotenv()
 
-engine = create_async_engine(os.getenv("DATABASE_URL"))
+engine = create_async_engine(os.getenv("DATABASE_URL"), pool_size=10, max_overflow=20)
 
 AsyncSessionLocal = sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)
 
@@ -19,9 +19,6 @@ async def create_db_and_tables():
 
 # Dependancy
 async def get_db():
-    db = AsyncSessionLocal()
-    try:
+    async with AsyncSessionLocal() as db:
         yield db
-    finally:
-        db.close()
 

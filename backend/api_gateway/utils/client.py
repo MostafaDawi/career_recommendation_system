@@ -10,7 +10,7 @@ UNSAFE_HEADERS = {
 
 # Can be extended with retry logic or connection pooling
 async def forward_request(method, url, headers=None, json=None, params=None):
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=30.0) as client:
 
         cleaned_headers = {
         k: v for k, v in (headers or {}).items()

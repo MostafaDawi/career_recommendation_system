@@ -19,6 +19,9 @@ class JobPosting_v2(BaseModel):
     salary: Optional[int] = None
     location: Optional[str] = None
     tags: Optional[List[str]] = None
+    jobType: Optional[str] = None
+    companyName: Optional[str] = None
+    contactEmail: Optional[str] = None
     embedding: List[float]
 
 class SearchRequest(BaseModel):

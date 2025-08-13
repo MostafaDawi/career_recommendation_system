@@ -1,18 +1,44 @@
-import { getToken } from "./auth";
-import { handleRequest } from "./api";
+import { getToken } from "./auth.js";
+import { handleRequest } from "./api.js";
 
-export async function fetchRecommendations(skills, interests, personality, description) {
+interface userInfo {
+  id: number;
+  name: string;
+  email: string;
+  skills: Array<string>;
+  interests: Array<string>;
+  description: string;
+  personality: Record<string, any>;
+}
+
+interface JobModel {
+  id: any;
+  job_title: string;
+  company: string;
+  location: string;
+  score: number;
+  tags: Array<string>;
+}
+
+interface JobList {
+  data: JobModel[];
+  status_code: number;
+}
+
+export async function fetchRecommendations(
+  user: userInfo
+): Promise<JobList | undefined> {
   const token = getToken();
-  const body = {
-    skills,
-    interests,
-    personality,
-    description
-  };
-
-  return handleRequest(
-    "http://localhost:8000/recommend/me",
-    "GET",
-    token
-  );
+  if (
+    user?.description &&
+    user?.interests &&
+    user?.personality &&
+    user?.skills
+  ) {
+    return handleRequest<JobList>(
+      "http://localhost:8000/recommend/me",
+      "GET",
+      token
+    );
+  }
 }

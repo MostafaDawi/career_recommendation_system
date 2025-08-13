@@ -20,17 +20,55 @@ interface LoginResponse {
     access_token: string;
     token_type: string;
   };
+  status_code: number;
 }
 
 interface RegisterResponse {
   data: {
     message: string;
   };
+  status_code: number;
+}
+
+interface userInfo {
+  id: any;
+  name: string;
+  email: string;
+  skills: Array<string>;
+  interests: Array<string>;
+  description: string;
+  personality: Record<string, any>;
+}
+
+interface JobInput {
+  title: string;
+  description: string;
+  salary: number;
+  location: string;
+  tags: Array<string>;
+  jobType: string;
+  companyName: string;
+  contactEmail: string;
 }
 
 interface UserResponse {
-  data: object;
+  data: userInfo;
+  statuse_code: number;
+}
+
+interface JobModel extends JobInput {
+  id: any;
+}
+
+interface JobList {
+  data: JobModel[];
   status_code: number;
+}
+interface UserProfileInput {
+  skills: Array<string>;
+  interests: Array<string>;
+  description: string;
+  personality: Record<string, any>;
 }
 
 export function useAuth() {
@@ -77,7 +115,7 @@ export function useAuth() {
       navigate("/login");
     },
     onError: (error: any) => {
-      toast.error(`Registration failed: ${error?.detail}`, {
+      toast.error(`Registration failed: ${error}`, {
         autoClose: 5000,
       });
     },
@@ -93,6 +131,28 @@ export function useAuth() {
         getToken()
       ),
     enabled: !!getToken(),
+  });
+
+  // Update user profile
+  const updateProfileMutation = useMutation({
+    mutationFn: (user_input: UserProfileInput | null) =>
+      handleRequest<UserResponse>(
+        "http://localhost:8000/user/me",
+        "PUT",
+        getToken(),
+        user_input
+      ),
+    onSuccess: (response: UserResponse) => {
+      console.log(response);
+      toast.success("User profile was updated successfully!", {
+        autoClose: 5000,
+      });
+    },
+    onError: (error: any) => {
+      toast.error(`User profile update failed: ${error?.message}`, {
+        autoClose: 5000,
+      });
+    },
   });
 
   // Logs user out
@@ -111,6 +171,49 @@ export function useAuth() {
     logout,
     register: registerMutation.mutate,
     registerError: registerMutation.error,
+    updateUser: updateProfileMutation.mutate,
+    updateUserError: updateProfileMutation.error,
     isAuthenticated: !!userQuery.data,
+  };
+}
+
+export function useJobs() {
+  // Fetch authenticated user
+  const jobQuery = useQuery<JobList>({
+    queryKey: ["jobs"],
+    queryFn: () =>
+      handleRequest<JobList>(
+        "http://localhost:8000/jobs/available_jobs",
+        "GET",
+        undefined,
+        null
+      ),
+  });
+
+  // Register
+  const createJobMutation = useMutation({
+    mutationFn: (job_input: JobInput) =>
+      handleRequest<JobModel>(
+        "http://localhost:8000/jobs/create",
+        "POST",
+        getToken(),
+        job_input
+      ),
+    onSuccess: (response) => {
+      toast.success("New Job Added Successfully!", { autoClose: 5000 });
+    },
+    onError: (error: any) => {
+      toast.error(`Job Insertion failed: ${error}`, {
+        autoClose: 5000,
+      });
+    },
+  });
+
+  return {
+    jobs: jobQuery.data?.data,
+    jobsError: jobQuery.error,
+    isLoadingJobs: jobQuery.isLoading,
+    createJob: createJobMutation.mutate,
+    createJobError: createJobMutation.error,
   };
 }
