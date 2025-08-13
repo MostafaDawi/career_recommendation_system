@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import UserProfileIcon from "../components/icons/UserProfileIcon";
 import { useAuth } from "../utils/hooks.js";
 import { Link, useNavigate } from "react-router-dom";
+import { getToken } from "../utils/auth.js";
 
 interface ProfilePageProps {
   onLogout: () => void;
@@ -22,7 +23,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onLogout }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!getToken()) {
       navigate("/login");
     }
   }, [user, isAuthenticated]);
@@ -211,20 +212,14 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onLogout }) => {
 
               <button
                 type="submit"
-                className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition"
+                className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition"
               >
-                Submit
+                Update Profile
               </button>
             </form>
           </div>
 
           <div className="space-y-4">
-            <button className="w-full py-3 px-6 bg-indigo-600 text-white rounded-lg shadow-md hover:bg-indigo-700 transition-colors duration-300">
-              View Saved Careers
-            </button>
-            <button className="w-full py-3 px-6 bg-gray-200 text-gray-800 rounded-lg shadow-md hover:bg-gray-300 transition-colors duration-300">
-              Quiz History
-            </button>
             <button
               onClick={onLogout}
               className="w-full py-3 px-6 bg-red-600 text-white rounded-lg shadow-md hover:bg-red-700 transition-colors duration-300"

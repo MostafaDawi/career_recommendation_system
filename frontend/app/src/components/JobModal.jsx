@@ -38,7 +38,7 @@ const JobModal = ({ job, onClose }) => {
       className="modal"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="modal-content mx-64">
+      <div className="modal-content mx-auto">
         <div className="modal-header">
           <div>
             <h2 className="font-bold text-2xl">{job.title}</h2>
@@ -53,24 +53,24 @@ const JobModal = ({ job, onClose }) => {
               {job.salary
                 ? `${job.salary.toLocaleString()}`
                 : "Salary not specified"}
-              {job.datePosted && <> • Posted {job.datePosted}</>}
+              {job.createdAt && <> • Posted {job.createdAt}</>}
             </div>
           </div>
         </div>
 
-        {job.tags && job.tags.length > 0 && (
-          <div className="modal-body">
-            <p>{job.description}</p>
-            <h4>Required Skills</h4>
+        <div className="modal-body">
+          <p>{job.description}</p>
+          {job.tags && job.tags.length > 0 && (
             <div>
+              <h4>Required Skills</h4>
               {job.tags.map((tag, idx) => (
                 <span key={idx} className="job-tag">
                   {tag}
                 </span>
               ))}
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
         <div class="flex gap-5 p-4">
           <button class="btn btn-primary">Apply Now</button>

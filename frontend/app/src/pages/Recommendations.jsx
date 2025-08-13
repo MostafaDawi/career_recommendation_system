@@ -108,7 +108,7 @@ const Recommendations = () => {
                   <div key={career.id} className="mb-12">
                     <div className="text-center mb-6">
                       <span className="inline-flex items-center px-6 py-3 bg-yellow-400 text-yellow-900 rounded-full font-bold text-lg">
-                        🏆 Perfect Match-
+                        🏆 Best Matches-
                         {(career?.score * 100).toFixed(0)}% Compatibility
                       </span>
                     </div>

@@ -22,7 +22,7 @@ app.add_middleware(
 )
 
 # Register the jobs router
-app.include_router(jobs_router)
+app.include_router(jobs_router, prefix="/jobs")
 
 @app.get("/")
 async def root():
