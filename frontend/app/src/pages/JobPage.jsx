@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import "./jobs.css";
 import AddJobModal from "../components/AddJobModal";
 import JobModal from "../components/JobModal";
+import { useJobs } from "../utils/hooks";
+import { ClipLoader } from "react-spinners";
+import { getToken } from "../utils/auth";
 
 // SVG Icons as components for reuse
 const LocationIcon = () => (
@@ -117,10 +120,11 @@ const initialJobs = [
 ];
 
 const JobPage = () => {
+  const { jobs: careers, jobsError, isLoadingJobs } = useJobs();
   const jobsPerPage = 6;
 
-  const [jobs, setJobs] = useState(initialJobs);
-  const [filteredJobs, setFilteredJobs] = useState(initialJobs);
+  const [jobs, setJobs] = useState([]);
+  const [filteredJobs, setFilteredJobs] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedJob, setSelectedJob] = useState(null);
 
@@ -131,11 +135,18 @@ const JobPage = () => {
   const [maxSalaryFilter, setMaxSalaryFilter] = useState("");
   const [tagsFilter, setTagsFilter] = useState("");
 
+  useEffect(() => {
+    if (careers) {
+      setJobs(careers);
+    }
+  }, [careers]);
+  console.log("Received Jobs: ", jobs?.length);
+
   // Add Job Modal State
   const [showAddModal, setShowAddModal] = useState(false);
 
   // Calculate total pages
-  const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
+  const totalPages = Math.ceil(filteredJobs?.length / jobsPerPage);
 
   // Filter jobs based on filters
   useEffect(() => {
@@ -145,12 +156,15 @@ const JobPage = () => {
     const maxSalary = parseInt(maxSalaryFilter) || Infinity;
     const tags = tagsFilter.toLowerCase().replace(/,/g, "").trim();
 
-    const filtered = jobs.filter((job) => {
+    const filtered = jobs?.filter((job) => {
       const titleMatch = job.title.toLowerCase().includes(title);
-      const locationMatch = job.location.toLowerCase().includes(location);
+      const locationMatch = job.location
+        ? job.location.toLowerCase().includes(location)
+        : "N/A";
       const salaryMatch = job.salary >= minSalary && job.salary <= maxSalary;
-      const tagsMatch =
-        tags === "" || job.tags.some((tag) => tag.toLowerCase().includes(tags));
+      const tagsMatch = job.tags
+        ? job.tags.some((tag) => tag.toLowerCase().includes(tags))
+        : "N/A";
       return titleMatch && locationMatch && salaryMatch && tagsMatch;
     });
 
@@ -166,7 +180,7 @@ const JobPage = () => {
   ]);
 
   // Pagination - get jobs for current page
-  const jobsToShow = filteredJobs.slice(
+  const jobsToShow = filteredJobs?.slice(
     (currentPage - 1) * jobsPerPage,
     currentPage * jobsPerPage
   );
@@ -197,8 +211,12 @@ const JobPage = () => {
   };
 
   const openAddJobModal = () => {
-    setShowAddModal(true);
-    document.body.style.overflow = "hidden";
+    if (getToken()) {
+      setShowAddModal(true);
+      document.body.style.overflow = "hidden";
+    } else {
+      alert("Please Sign in first");
+    }
   };
 
   const closeAddJobModal = () => {
@@ -212,11 +230,11 @@ const JobPage = () => {
 
   // Format salary helper
   const formatSalary = (salary) =>
-    salary ? `$${salary.toLocaleString()}` : "Salary not specified";
+    salary ? `$${salary.toLocaleString()}` : "$ Salary not specified";
 
   // Apply to job handler
   const applyToJob = (job) => {
-    if (job.contactEmail) {
+    if (job.id) {
       const subject = encodeURIComponent(
         `Application for ${job.title} position`
       );
@@ -235,7 +253,7 @@ const JobPage = () => {
     }
   };
 
-  const [filters, setFilters] = React.useState({
+  const [filters, setFilters] = useState({
     title: "",
     location: "",
     minSalary: "",
@@ -263,7 +281,7 @@ const JobPage = () => {
               <input
                 type="text"
                 name="title"
-                value={filters.title}
+                value={filters?.title}
                 onChange={handleFilterChange}
                 placeholder="Search by title..."
                 className="filter-input"
@@ -274,7 +292,7 @@ const JobPage = () => {
               <input
                 type="text"
                 name="location"
-                value={filters.location}
+                value={filters?.location}
                 onChange={handleFilterChange}
                 placeholder="Search by location..."
                 className="filter-input"
@@ -286,7 +304,7 @@ const JobPage = () => {
               <input
                 type="text"
                 name="maxSalary"
-                value={filters.maxSalary}
+                value={filters?.maxSalary}
                 onChange={handleFilterChange}
                 placeholder="Search by max salary..."
                 className="filter-input"
@@ -298,7 +316,7 @@ const JobPage = () => {
               <input
                 type="text"
                 name="minSalary"
-                value={filters.minSalary}
+                value={filters?.minSalary}
                 onChange={handleFilterChange}
                 placeholder="Search by min salary..."
                 className="filter-input"
@@ -310,7 +328,7 @@ const JobPage = () => {
             <input
               type="text"
               name="tags"
-              value={filters.tags}
+              value={filters?.tags}
               onChange={handleFilterChange}
               placeholder="Search by tags..."
               className="filter-input"
@@ -326,97 +344,100 @@ const JobPage = () => {
             </button>
           </div>
         </div>
-
         {/* Results Info */}
         <div className="results-info mb-4">
-          {filteredJobs.length > 0
+          {filteredJobs?.length > 0
             ? `Showing ${(currentPage - 1) * jobsPerPage + 1}-${Math.min(
                 currentPage * jobsPerPage,
-                filteredJobs.length
-              )} of ${filteredJobs.length} jobs`
+                filteredJobs?.length
+              )} of ${filteredJobs?.length} jobs`
             : "No jobs found."}
         </div>
-
         {/* Jobs Grid */}
         <div className="jobs-grid">
-          {jobsToShow.length === 0 && <div>No jobs found.</div>}
-          {jobsToShow.map((job) => (
-            <div
-              key={job.id}
-              className="job-card transform-transition duration-300 hover:scale-103"
-              onClick={() => openModal(job)}
-            >
-              <div className="job-header">
-                <div>
-                  <h3 className="job-title">{job.title}</h3>
-                  {job.companyName && (
-                    <div className="job-info company-name">
-                      {job.companyName}
+          {jobsToShow?.length === 0 && <div>No jobs found.</div>}
+          {!isLoadingJobs ? (
+            jobsToShow?.map((job) => (
+              <div
+                key={job.id}
+                className="job-card transform-transition duration-300 hover:scale-103"
+                onClick={() => openModal(job)}
+              >
+                <div className="job-header">
+                  <div>
+                    <h3 className="job-title">{job.title}</h3>
+                    {job.companyName && (
+                      <div className="job-info company-name">
+                        {job.companyName}
+                      </div>
+                    )}
+                    <div className="job-info location">
+                      <LocationIcon />
+                      {job.location ? job.location : "Not Specified"}
                     </div>
-                  )}
-                  <div className="job-info location">
-                    <LocationIcon />
-                    {job.location}
-                  </div>
-                  <div className="job-info salary">
-                    {formatSalary(job.salary)}
-                  </div>
-                  {job.jobType && (
-                    <div className="job-info job-type">
-                      <JobClockIcon />
-                      {job.jobType}
+                    <div className="job-info salary">
+                      {formatSalary(job.salary)}
                     </div>
+                    {job.jobType && (
+                      <div className="job-info job-type">
+                        <JobClockIcon />
+                        {job.jobType}
+                      </div>
+                    )}
+                  </div>
+                  <span
+                    className="job-badge"
+                    style={{
+                      backgroundColor:
+                        parseInt(job.id) >= 11 ? "#10b981" : undefined,
+                      color: parseInt(job.id) >= 11 ? "white" : undefined,
+                    }}
+                  >
+                    {parseInt(job.id) >= 11 ? "Just Added" : "New"}
+                  </span>
+                </div>
+
+                <p className="job-description">{job.description}</p>
+
+                <div className="job-tags">
+                  {job.tags?.slice(0, 3).map((tag) => (
+                    <span key={tag} className="job-tag">
+                      {tag}
+                    </span>
+                  ))}
+                  {job.tags?.length > 3 && (
+                    <span className="job-tag">
+                      +{job.tags?.length - 3} more
+                    </span>
                   )}
                 </div>
-                <span
-                  className="job-badge"
-                  style={{
-                    backgroundColor:
-                      parseInt(job.id) >= 11 ? "#10b981" : undefined,
-                    color: parseInt(job.id) >= 11 ? "white" : undefined,
-                  }}
-                >
-                  {parseInt(job.id) >= 11 ? "Just Added" : "New"}
-                </span>
-              </div>
 
-              <p className="job-description">{job.description}</p>
-
-              <div className="job-tags">
-                {job.tags.slice(0, 3).map((tag) => (
-                  <span key={tag} className="job-tag">
-                    {tag}
-                  </span>
-                ))}
-                {job.tags.length > 3 && (
-                  <span className="job-tag">+{job.tags.length - 3} more</span>
-                )}
+                <div className="job-actions">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openModal(job);
+                    }}
+                    className="view-details"
+                  >
+                    View Details →
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      applyToJob(job);
+                    }}
+                    className="apply-btn"
+                  >
+                    Apply Now
+                  </button>
+                </div>
               </div>
-
-              <div className="job-actions">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    openModal(job);
-                  }}
-                  className="view-details"
-                >
-                  View Details →
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    applyToJob(job);
-                  }}
-                  className="apply-btn"
-                >
-                  Apply Now
-                </button>
-              </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <ClipLoader />
+          )}
         </div>
-
         {/* Pagination */}
         {totalPages > 1 && (
           <div className="pagination">
@@ -454,12 +475,10 @@ const JobPage = () => {
             </button>
           </div>
         )}
-
         {/* Add Job Button */}
         <button className="btn btn-primary" onClick={openAddJobModal}>
           Add Job
         </button>
-
         {/* Modals */}
         {selectedJob && <JobModal job={selectedJob} onClose={closeModal} />}
         {showAddModal && (

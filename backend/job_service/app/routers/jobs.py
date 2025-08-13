@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Body, Depends, HTTPException, UploadFile, File
-from sqlalchemy import and_, select
+from sqlalchemy import and_, delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models import Job
 from app.schemas import JobCreate, JobOut, JobOutEmbedded
@@ -10,8 +10,18 @@ from typing import List
 import json
 from typing import List, Optional
 
-router = APIRouter( prefix="/jobs", tags=["jobs"])
+router = APIRouter(tags=["jobs"])
 
+@router.get("/", response_model=List[JobOut])
+async def get_jobs(page: int = 1, limit: int = 10, db: AsyncSession = Depends(get_db)):
+    try:
+        offset = (page - 1) * limit
+        result = await db.execute(select(Job).offset(offset).limit(limit))
+        jobs = result.scalars().all()  # Correct way to get list of Job instances
+        return jobs
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
 @router.post("/upload")
 async def upload_jobs(file: UploadFile = File(...), db: AsyncSession = Depends(get_db)):
     try:
@@ -71,15 +81,6 @@ async def upload_jobs_json(job: JobCreate, db: AsyncSession = Depends(get_db)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.get("/", response_model=List[JobOut])
-async def get_jobs(page: int = 1, limit: int = 10, db: AsyncSession = Depends(get_db)):
-    try:
-        offset = (page - 1) * limit
-        result = await db.execute(select(Job).offset(offset).limit(limit))
-        jobs = result.scalars().all()  # Correct way to get list of Job instances
-        return jobs
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
     
 @router.put("/{job_id}", response_model=JobOut)
 async def update_job(
@@ -125,6 +126,14 @@ async def delete_job(job_id: str, db: AsyncSession = Depends(get_db)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
+@router.delete("/")
+async def delete_job(db: AsyncSession = Depends(get_db)):
+    try:
+        await db.execute(delete(Job))
+        await db.commit()
+        return {"message": f"All Jobs were deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/search", response_model=List[JobOut])
 async def search_jobs(
