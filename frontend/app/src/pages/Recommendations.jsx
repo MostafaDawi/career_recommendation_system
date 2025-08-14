@@ -14,6 +14,7 @@ import {
   FaCodeBranch,
   FaMicrochip,
 } from "react-icons/fa";
+import { getToken } from "../utils/auth";
 
 const icons = [
   <FaLaptopCode />,
@@ -33,13 +34,12 @@ const gradientColors = [
 
 const Recommendations = () => {
   const [openModal, setOpenModal] = useState(null);
-  const { isAuthenticated, user } = useAuth();
+  const { user } = useAuth();
   const [careers, setCareers] = useState([]);
   const navigate = useNavigate();
 
   console.log(user);
-  const authorize_and_ready =
-    isAuthenticated &&
+  const all_info_ready =
     user?.description !== undefined &&
     user?.interests !== undefined &&
     user?.personality !== undefined &&
@@ -52,7 +52,7 @@ const Recommendations = () => {
     error,
   } = useQuery({
     queryKey: ["recommendations"],
-    enabled: authorize_and_ready, // استدعي الطلب بس لو المستخدم مسجل دخول
+    enabled: all_info_ready && getToken(), // استدعي الطلب بس لو المستخدم مسجل دخول
     queryFn: () => fetchRecommendations(user),
   });
 
@@ -62,7 +62,7 @@ const Recommendations = () => {
     }
   }, [user, recommended_jobs, isError]);
 
-  if (!authorize_and_ready) {
+  if (!all_info_ready) {
     return (
       <div className="min-h-screen flex flex-col justify-center items-center">
         <p className="text-lg mb-4">
