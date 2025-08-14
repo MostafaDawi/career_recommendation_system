@@ -4,11 +4,15 @@ import os
 
 load_dotenv()
 
+client = None
+
 VECTORDB_URL = os.getenv("QDRANT_URL")
+
 if (os.getenv("ENV") != "Development"):
     API_KEY = os.getenv("API_KEY")
-
-client = QdrantClient(url=VECTORDB_URL, api_key=API_KEY)
+    client = QdrantClient(url=VECTORDB_URL, api_key=API_KEY)
+else:
+    client = QdrantClient(url=VECTORDB_URL)
 
 collection_name = "jobs-collection"
 EMBEDDING_DIMENSIONALITY = 384

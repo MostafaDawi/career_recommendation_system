@@ -1,6 +1,14 @@
 import { getToken } from "./auth.js";
 import { handleRequest } from "./api.js";
 
+let api_url: string = null;
+
+if (import.meta.env.ENV === "Development") {
+  api_url = "http://localhost:8000";
+} else {
+  api_url = import.meta.env.VITE_API_GATEWAY_URL;
+}
+
 interface userInfo {
   id: number;
   name: string;
@@ -27,9 +35,5 @@ interface JobList {
 
 export async function fetchRecommendations(): Promise<JobList> {
   const token = getToken();
-  return handleRequest<JobList>(
-    "http://localhost:8000/recommend/me",
-    "GET",
-    token
-  );
+  return handleRequest<JobList>(`${api_url}/recommend/me`, "GET", token);
 }

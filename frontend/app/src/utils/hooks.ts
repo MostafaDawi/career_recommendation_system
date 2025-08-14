@@ -4,6 +4,14 @@ import { clearToken, getToken, setToken } from "./auth.js";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
+let api_url: string = null;
+
+if (import.meta.env.ENV === "Development") {
+  api_url = "http://localhost:8000";
+} else {
+  api_url = import.meta.env.VITE_API_GATEWAY_URL;
+}
+
 interface LoginInput {
   email: string;
   password: string;
@@ -84,7 +92,7 @@ export function useAuth() {
   const loginMutation = useMutation({
     mutationFn: (user_input: LoginInput) =>
       handleRequest<LoginResponse>(
-        "http://localhost:8000/auth/login",
+        `${api_url}/auth/login`,
         "POST",
         undefined,
         user_input
@@ -110,7 +118,7 @@ export function useAuth() {
   const registerMutation = useMutation({
     mutationFn: (user_input: RegisterInput) =>
       handleRequest<RegisterResponse>(
-        "http://localhost:8000/auth/register",
+        `${api_url}/auth/register`,
         "POST",
         undefined,
         user_input
@@ -130,11 +138,7 @@ export function useAuth() {
   const userQuery = useQuery<UserResponse>({
     queryKey: ["me"],
     queryFn: () =>
-      handleRequest<UserResponse>(
-        "http://localhost:8000/auth/me",
-        "GET",
-        getToken()
-      ),
+      handleRequest<UserResponse>(`${api_url}/auth/me`, "GET", getToken()),
     enabled: !!getToken(),
   });
 
@@ -142,7 +146,7 @@ export function useAuth() {
   const updateProfileMutation = useMutation({
     mutationFn: (user_input: UserProfileInput | null) =>
       handleRequest<UserResponse>(
-        "http://localhost:8000/user/me",
+        `${api_url}/user/me`,
         "PUT",
         getToken(),
         user_input
@@ -164,7 +168,7 @@ export function useAuth() {
   const updatePassword = useMutation({
     mutationFn: (user_input: PasswordInput | null) =>
       handleRequest<UserResponse>(
-        "http://localhost:8000/user/change_password",
+        `${api_url}/user/change_password`,
         "PUT",
         getToken(),
         user_input
@@ -213,7 +217,7 @@ export function useJobs() {
     queryKey: ["jobs"],
     queryFn: () =>
       handleRequest<JobList>(
-        "http://localhost:8000/jobs/available_jobs",
+        `${api_url}/jobs/available_jobs`,
         "GET",
         undefined,
         null
@@ -224,7 +228,7 @@ export function useJobs() {
   const createJobMutation = useMutation({
     mutationFn: (job_input: JobInput) =>
       handleRequest<JobModel>(
-        "http://localhost:8000/jobs/create",
+        `${api_url}/jobs/create`,
         "POST",
         getToken(),
         job_input
