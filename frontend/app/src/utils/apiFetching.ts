@@ -25,20 +25,11 @@ interface JobList {
   status_code: number;
 }
 
-export async function fetchRecommendations(
-  user: userInfo
-): Promise<JobList | undefined> {
+export async function fetchRecommendations(): Promise<JobList> {
   const token = getToken();
-  if (
-    user?.description &&
-    user?.interests &&
-    user?.personality &&
-    user?.skills
-  ) {
-    return handleRequest<JobList>(
-      "http://localhost:8000/recommend/me",
-      "GET",
-      token
-    );
-  }
+  return handleRequest<JobList>(
+    "http://localhost:8000/recommend/me",
+    "GET",
+    token
+  );
 }

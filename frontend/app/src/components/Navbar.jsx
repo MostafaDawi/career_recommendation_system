@@ -6,7 +6,7 @@ import UserProfileIcon from "./icons/UserProfileIcon";
 import { getToken } from "../utils/auth";
 
 function Navbar() {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, user } = useAuth();
   const [auth, setAuth] = useState(isAuthenticated);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [open, setOpen] = useState(false);
@@ -168,7 +168,7 @@ function Navbar() {
                   {/* Icon Button */}
                   <button
                     onClick={() => setOpen((prev) => !prev)}
-                    className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-200 transition"
+                    className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-200 transition border border-black-10"
                   >
                     <UserProfileIcon className="w-8 h-8 text-gray-700" />
                   </button>
@@ -185,11 +185,11 @@ function Navbar() {
 
                         <div className="flex flex-col  text-xs  cursor-pointer">
                           <Link
-                            // to="/change_password"
+                            to="/change_password"
                             onClick={closeDrawer}
-                            className="px-4 py-2 text-gray-500 hover:bg-gray-100"
+                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                           >
-                            Change Password (To Be Added Later)
+                            Change Password
                           </Link>
                           <Link
                             // to="/save_quiz"
@@ -209,6 +209,7 @@ function Navbar() {
                     </div>
                   )}
                 </div>
+                <div className="font-bold">{user.name}</div>
               </div>
             )}
           </div>
@@ -284,11 +285,11 @@ function Navbar() {
               </Link>
               <div className="flex flex-col text-sm space-y-4">
                 <Link
-                  // to="/change_password"
+                  to="/change_password"
                   onClick={closeDrawer}
-                  className="text-gray-500 hover:text-indigo-600"
+                  className="text-gray-700 hover:text-indigo-600"
                 >
-                  Change Password (To Be Added Later)
+                  Change Password
                 </Link>
                 <Link
                   // to="/save_quiz"

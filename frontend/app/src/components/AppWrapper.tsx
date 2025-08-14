@@ -5,6 +5,7 @@ import Login from "../pages/Login.jsx";
 import Register from "../pages/Register.jsx";
 import Recommendations from "../pages/Recommendations.jsx";
 import JobPage from "../pages/JobPage.jsx";
+import ChangePassword from "../pages/ChangePassword.jsx";
 
 // import MBTIQuiz from "../pages/MBTIQuiz.js";
 import { useState } from "react";
@@ -82,6 +83,7 @@ function AppWrapper() {
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/change_password" element={<ChangePassword />} />
           <Route
             path="/profile"
             element={<ProfilePage onLogout={logoutApp} />}

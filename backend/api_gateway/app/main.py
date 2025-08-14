@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routes import auth, user, job, recommendation, chatbot
 
 app = FastAPI(title="API Gateway")
-app.router.redirect_slashes = False
+app.router.redirect_slashes = True
 
 app.add_middleware(
     CORSMiddleware,
