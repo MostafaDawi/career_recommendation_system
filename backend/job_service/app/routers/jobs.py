@@ -54,32 +54,37 @@ async def upload_jobs(file: UploadFile = File(...), db: AsyncSession = Depends(g
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/create_job")
-async def upload_jobs_json(job: JobCreate, db: AsyncSession = Depends(get_db)):
-    try:
-        job_obj = Job(**job.model_dump())
-
-        db.add(job_obj)
-        await db.commit()
-        await db.refresh(job_obj)
-
-        # Optionally call embedding service
-        result = await embedding_service.send_to_embedding_service(job_obj)
-        embedding = result.get("embedding")
-
-        # Create the response dict manually
-        job_dict = JobOut.model_validate(job_obj).model_dump()
-        job_dict["embedding"] = embedding
-        job_dict["id"] = str(job_dict["id"])
-        # ===== TO BE ADDED WHEN VECTOR DB IS READY =====
+async def create_jobs(job: JobCreate, db: AsyncSession = Depends(get_db)):
+    # Use an async context manager to ensure session is closed
+    async with db:
         try:
-            res = await store_in_vectordb.send_to_vectordb_service(job_dict)
+            # Create the job object
+            job_obj = Job(**job.model_dump())
+            db.add(job_obj)
+            await db.commit()
+            await db.refresh(job_obj)
+
+            # Send to embedding service
+            result = await embedding_service.send_to_embedding_service(job_obj)
+            embedding = result.get("embedding")
+
+            # Prepare job dict
+            job_dict = JobOut.model_validate(job_obj).model_dump()
+            job_dict["embedding"] = embedding
+            job_dict["id"] = str(job_dict["id"])
+
         except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+            # Any DB-related or embedding error will rollback
+            await db.rollback()
+            raise HTTPException(status_code=500, detail=f"DB/Embedding error: {str(e)}")
 
-        return {"message":"Stored in Postgres and Vector DBs successfully!", "job":JobOutEmbedded(**job_dict)}
-
+    # Outside the DB session, call vector DB safely
+    try:
+        res = await store_in_vectordb.send_to_vectordb_service(job_dict)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=f"Vector DB error: {str(e)}")
+
+    return {"message": "Stored in Postgres and Vector DBs successfully!", "job": JobOutEmbedded(**job_dict)}
 
     
 @router.put("/{job_id}", response_model=JobOut)
