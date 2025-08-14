@@ -34,7 +34,7 @@ const gradientColors = [
 
 const Recommendations = () => {
   const [openModal, setOpenModal] = useState(null);
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const [careers, setCareers] = useState([]);
   const navigate = useNavigate();
 
@@ -52,7 +52,7 @@ const Recommendations = () => {
     error,
   } = useQuery({
     queryKey: ["recommendations"],
-    enabled: all_info_ready && getToken(), // استدعي الطلب بس لو المستخدم مسجل دخول
+    enabled: all_info_ready && isAuthenticated, // استدعي الطلب بس لو المستخدم مسجل دخول
     queryFn: () => fetchRecommendations(user),
   });
 
