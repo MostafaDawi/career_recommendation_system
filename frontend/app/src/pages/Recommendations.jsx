@@ -38,6 +38,12 @@ const Recommendations = () => {
   const navigate = useNavigate();
 
   console.log(user);
+  const authorize_and_ready =
+    isAuthenticated &&
+    user?.description !== undefined &&
+    user?.interests !== undefined &&
+    user?.personality !== undefined &&
+    user?.skills !== undefined;
 
   const {
     data: recommended_jobs,
@@ -46,17 +52,17 @@ const Recommendations = () => {
     error,
   } = useQuery({
     queryKey: ["recommendations"],
-    enabled: isAuthenticated, // استدعي الطلب بس لو المستخدم مسجل دخول
+    enabled: authorize_and_ready, // استدعي الطلب بس لو المستخدم مسجل دخول
     queryFn: () => fetchRecommendations(user),
   });
 
   useEffect(() => {
-    if (Array.isArray(recommended_jobs?.data)) {
+    if (Array.isArray(recommended_jobs?.data) && !isError) {
       setCareers([...recommended_jobs?.data].sort((a, b) => b.score - a.score));
     }
-  }, [user, recommended_jobs]);
+  }, [user, recommended_jobs, isError]);
 
-  if (!careers) {
+  if (!careers || !recommended_jobs?.data) {
     return (
       <div className="min-h-screen flex flex-col justify-center items-center">
         <p className="text-lg mb-4">
