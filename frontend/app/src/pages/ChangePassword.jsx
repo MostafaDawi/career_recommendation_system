@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { getToken } from "../utils/auth";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../utils/hooks";
 
 // Utility function to calculate password strength
 const calculatePasswordStrength = (password) => {
@@ -16,6 +17,8 @@ const calculatePasswordStrength = (password) => {
 const ChangePassword = () => {
   const token = getToken();
   const navigate = useNavigate();
+  const { updatePass, updatePassError, isPendingPass } = useAuth();
+
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -66,28 +69,7 @@ const ChangePassword = () => {
       return;
     }
 
-    // Simulate API call
-    setIsLoading(true);
-    setTimeout(() => {
-      const isApiSuccess = Math.random() > 0.3;
-
-      if (isApiSuccess) {
-        setIsSuccess(true);
-        // Reset form inputs after success
-        setCurrentPassword("");
-        setNewPassword("");
-        setConfirmPassword("");
-        setEmail("");
-        setShowCurrentPassword(false);
-        setShowNewPassword(false);
-        setShowConfirmPassword(false);
-      } else {
-        setErrorMessage("An error occurred. Please try again.");
-        setIsSuccess(false);
-      }
-
-      setIsLoading(false);
-    }, 1500);
+    updatePass({ oldPassword: currentPassword, newPassword });
   };
 
   const strengthColors = [
@@ -133,6 +115,36 @@ const ChangePassword = () => {
         {/* Form and Messages Section */}
         <div className="p-6 space-y-6">
           <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Error Message */}
+            {updatePassError && (
+              <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+                <div className="flex items-center space-x-4">
+                  <i className="fas fa-exclamation-circle text-red-500"></i>
+                  <div>
+                    <p className="font-medium">{updatePassError?.message}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+            {/* Email Field */}
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Email Address
+              </label>
+              <input
+                type="email"
+                id="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="Enter your email for verification"
+              />
+            </div>
+
             {/* Current Password Field */}
             <div>
               <label
@@ -209,25 +221,6 @@ const ChangePassword = () => {
               </p>
             </div>
 
-            {/* Email Field */}
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Email Address
-              </label>
-              <input
-                type="email"
-                id="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="Enter your email for verification"
-              />
-            </div>
-
             {/* Confirm Password Field */}
             <div>
               <label
@@ -275,7 +268,7 @@ const ChangePassword = () => {
                 className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center group-hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span>Update Password</span>
-                {isLoading && (
+                {isPendingPass && (
                   <span className="ml-2">
                     <i className="fas fa-spinner fa-spin"></i>
                   </span>
@@ -283,42 +276,6 @@ const ChangePassword = () => {
               </button>
             </div>
           </form>
-
-          {/* Success Message */}
-          {isSuccess && (
-            <div className="p-4 bg-green-50 border border-green-200 rounded-lg text-green-700">
-              <div className="flex items-center space-x-4">
-                <i className="fas fa-check-circle text-green-500"></i>
-                <div>
-                  <p className="font-medium">Password Updated Successfully!</p>
-                  <p className="text-sm mt-1">
-                    Your account is now more secure
-                  </p>
-                </div>
-              </div>
-              <a
-                href="/"
-                className="mt-4 block text-center text-indigo-600 hover:text-indigo-800"
-              >
-                Return to Home Page
-              </a>
-            </div>
-          )}
-
-          {/* Error Message */}
-          {errorMessage && (
-            <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
-              <div className="flex items-center space-x-4">
-                <i className="fas fa-exclamation-circle text-red-500"></i>
-                <div>
-                  <p className="font-medium">{errorMessage}</p>
-                  <p className="text-sm mt-1">
-                    Please try again or contact support
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>

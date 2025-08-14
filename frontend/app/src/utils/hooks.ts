@@ -9,6 +9,11 @@ interface LoginInput {
   password: string;
 }
 
+interface PasswordInput {
+  oldPassword: string;
+  newPassword: string;
+}
+
 interface RegisterInput {
   name: string;
   email: string;
@@ -155,6 +160,28 @@ export function useAuth() {
     },
   });
 
+  // Update user password
+  const updatePassword = useMutation({
+    mutationFn: (user_input: PasswordInput | null) =>
+      handleRequest<UserResponse>(
+        "http://localhost:8000/user/change_password",
+        "PUT",
+        getToken(),
+        user_input
+      ),
+    onSuccess: (response: UserResponse) => {
+      console.log(response);
+      toast.success("User password was updated successfully!", {
+        autoClose: 5000,
+      });
+    },
+    onError: (error: any) => {
+      toast.error(`User password update failed: ${error?.message}`, {
+        autoClose: 5000,
+      });
+    },
+  });
+
   // Logs user out
   const logout = () => {
     clearToken();
@@ -168,6 +195,9 @@ export function useAuth() {
     isLoading: userQuery.isLoading,
     login: loginMutation.mutate,
     loginError: loginMutation.error,
+    updatePass: updatePassword.mutate,
+    updatePassError: updatePassword.error,
+    isPendingPass: updatePassword.isPending,
     logout,
     register: registerMutation.mutate,
     registerError: registerMutation.error,

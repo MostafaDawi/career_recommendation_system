@@ -53,7 +53,7 @@ const QuizPage: React.FC<QuizPageProps> = ({ onComplete }) => {
   return (
     <div
       ref={quizRef}
-      className="bg-gray-100 min-h-screen flex flex-col items-center justify-center font-inter"
+      className=" min-h-screen flex flex-col items-center justify-center font-inter"
     >
       <div className="w-full max-w-2xl px-4">
         <div className="bg-white p-8 rounded-xl shadow-2xl relative overflow-hidden">

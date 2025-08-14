@@ -11,6 +11,9 @@
   border: 2px solid rgba(139, 92, 246, 0.3);
   box-shadow: 0 25px 50px -12px rgba(139, 92, 246, 0.25);
 }
+.gradient-bg {
+  background: linear-gradient(135deg, #4f46e520 0%, #10b98120 100%);
+}
 
 .top-match-card {
   background: linear-gradient(

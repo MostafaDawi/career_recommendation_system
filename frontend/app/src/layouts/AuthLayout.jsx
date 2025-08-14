@@ -7,8 +7,8 @@ const AuthLayout = () => {
   return (
     <>
       <Navbar />
-      <ToastContainer position="top-center" />
-      <main className="pt-8 px-6 bg-gray-50">
+      <ToastContainer position="top-right" className="mt-15" />
+      <main className="pt-8 px-6 gradient-bg">
         <Outlet />
       </main>
     </>

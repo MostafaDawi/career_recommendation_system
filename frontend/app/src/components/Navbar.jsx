@@ -114,30 +114,27 @@ function Navbar() {
                       <path d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" />
                     </svg>
                   </button>
-
                   {/* Dropdown Menu */}
-                  {isOpenDashboard && (
-                    <div
-                      className={`absolute right-0 mt-2 w-52 p-2 bg-white rounded-md shadow-lg border border-gray-200 transform transition-all duration-300 origin-top ${
-                        isOpenDashboard
-                          ? "opacity-100 scale-y-100 translate-y-0"
-                          : "opacity-0 scale-y-0 -translate-y-2 pointer-events-none"
-                      }`}
-                    >
-                      <ul className="py-1 text-gray-700">
-                        <Link to="/recommended">
-                          <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                            Recommended Jobs
-                          </li>
-                        </Link>
-                        <Link to="/quiz">
-                          <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                            Personality Test
-                          </li>
-                        </Link>
-                      </ul>
-                    </div>
-                  )}
+                  <div
+                    className={`absolute right-0 mt-2 w-52 p-2 bg-white rounded-sm shadow-lg border border-gray-200 transform transition duration-300 ${
+                      isOpenDashboard
+                        ? "opacity-100 scale-y-100 translate-y-2 pointer-events-auto"
+                        : "opacity-0 scale-y-95 -translate-y-2 pointer-events-none"
+                    } origin-top`}
+                  >
+                    <ul className="py-1 text-gray-700">
+                      <Link to="/recommended">
+                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                          Recommended Jobs
+                        </li>
+                      </Link>
+                      <Link to="/quiz">
+                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                          Personality Test
+                        </li>
+                      </Link>
+                    </ul>
+                  </div>
                 </div>
               ) : (
                 <Link
@@ -172,42 +169,38 @@ function Navbar() {
                   >
                     <UserProfileIcon className="w-8 h-8 text-gray-700" />
                   </button>
-
                   {/* Dropdown Menu */}
-                  {open && (
-                    <div className="absolute -right-5 mt-2 w-48 bg-white rounded-lg shadow-lg px-2 border border-gray-200">
-                      <ul className="py-2 text-sm text-gray-700">
-                        <Link to="/profile">
-                          <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                            Profile
-                          </li>
-                        </Link>
-
-                        <div className="flex flex-col  text-xs  cursor-pointer">
-                          <Link
-                            to="/change_password"
-                            onClick={closeDrawer}
-                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                          >
-                            Change Password
-                          </Link>
-                          <Link
-                            // to="/save_quiz"
-                            onClick={closeDrawer}
-                            className="px-4 py-2 text-gray-500 hover:bg-gray-100"
-                          >
-                            Saved Tests (To Be Added Later)
-                          </Link>
-                        </div>
-                        <li
-                          onClick={logoutHandler}
-                          className="px-4 py-2 text-red-600 hover:bg-gray-100 cursor-pointer"
-                        >
-                          Logout
+                  <div
+                    className={`absolute -right-5 mt-2 w-48 bg-white rounded-lg shadow-lg px-2 border border-gray-200 transform-gpu transition duration-300 ease-in-out ${
+                      open
+                        ? "opacity-100 translate-y-2 scale-100 pointer-events-auto"
+                        : "opacity-0 -translate-y-2 scale-95 pointer-events-none"
+                    }`}
+                  >
+                    <ul className="py-2 text-sm text-gray-700">
+                      <Link to="/profile">
+                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                          Profile
                         </li>
-                      </ul>
-                    </div>
-                  )}
+                      </Link>
+
+                      <div className="flex flex-col cursor-pointer">
+                        <Link
+                          to="/change_password"
+                          onClick={closeDrawer}
+                          className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                        >
+                          Change Password
+                        </Link>
+                      </div>
+                      <li
+                        onClick={logoutHandler}
+                        className="px-4 py-2 text-red-600 hover:bg-gray-100 cursor-pointer"
+                      >
+                        Logout
+                      </li>
+                    </ul>
+                  </div>
                 </div>
                 <div className="font-bold">{user.name}</div>
               </div>

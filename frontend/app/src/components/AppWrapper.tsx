@@ -60,6 +60,11 @@ function AppWrapper() {
             path="/"
             element={<HomePage onStartQuiz={handleStartQuiz} />}
           />
+        </Route>
+
+        <Route element={<RecommendLayout />}>
+          <Route path="/recommended" element={<Recommendations />} />
+          <Route path="/job" element={<JobPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route
             path="/contact"
@@ -73,11 +78,6 @@ function AppWrapper() {
             path="/results"
             element={<ResultsPage type={mbtiType} onRestart={handleRestart} />}
           />
-        </Route>
-
-        <Route element={<RecommendLayout />}>
-          <Route path="/recommended" element={<Recommendations />} />
-          <Route path="/job" element={<JobPage />} />
         </Route>
 
         <Route element={<AuthLayout />}>

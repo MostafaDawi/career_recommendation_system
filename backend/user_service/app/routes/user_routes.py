@@ -30,7 +30,15 @@ async def update_user(user_id:int, user: schemas.UserUpdate = Body(default=None)
 
 @router.delete("/{user_id}")
 async def delete_user(user_id: int, db: AsyncSession = Depends(database.get_db)):
-    user = await services.get_user_by_id_or_email(db=db, user_email=user.email)
+    user = await services.get_user_by_id_or_email(db=db, user_id=user_id)
     if user:
         raise HTTPException(status_code=400, detail="User Doesn't Exist")
     return await services.delete_user(db=db, user_id=user_id)
+
+@router.put("/change_pass/{user_id}", response_model=schemas.UserOut)
+async def update_pass(user_id: int, userPass: schemas.PasswordUpdate = Body(default=None), db: AsyncSession = Depends(database.get_db)):
+    user = await services.get_user_by_id_or_email(db=db, user_id=user_id)
+    print("Request Password: ", userPass)
+    if not user:
+        raise HTTPException(status_code=400, detail="User Doesn't Exist")
+    return await services.update_password(db=db, req=userPass, user_id=user_id)
