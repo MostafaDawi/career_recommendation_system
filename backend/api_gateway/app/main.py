@@ -1,6 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes import auth, user, job, recommendation, chatbot
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 app = FastAPI(title="API Gateway")
 app.router.redirect_slashes = True

@@ -20,7 +20,7 @@ async def recommend(request: Request, token_data=Depends(verify_jwt_token)):
     user = json.loads(response.body.decode())
 
     user = user["data"]
-    
+    print(user["personality"])
     request_kwargs = {
         "skills":", ".join(user['skills']),
         "description":user['description'],
