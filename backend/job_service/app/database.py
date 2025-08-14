@@ -21,9 +21,6 @@ async def create_db_and_tables():
         await conn.run_sync(Base.metadata.create_all)
 
 # Dependency for FastAPI routes
-def get_db():
-    db = AsyncSessionLocal()
-    try:
+async def get_db():
+    async with AsyncSessionLocal() as db:
         yield db
-    finally:
-        db.close()

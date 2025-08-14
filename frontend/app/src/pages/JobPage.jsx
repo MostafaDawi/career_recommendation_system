@@ -355,7 +355,6 @@ const JobPage = () => {
         </div>
         {/* Jobs Grid */}
         <div className="jobs-grid">
-          {jobsToShow?.length === 0 && <div>No jobs found.</div>}
           {!isLoadingJobs ? (
             jobsToShow?.map((job) => (
               <div

@@ -34,6 +34,7 @@ interface JobList {
 }
 
 export async function fetchRecommendations(): Promise<JobList> {
+  console.log("API URL: ", api_url);
   const token = getToken();
   return handleRequest<JobList>(`${api_url}/recommend/me`, "GET", token);
 }
