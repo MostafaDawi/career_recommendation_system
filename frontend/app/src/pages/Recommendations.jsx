@@ -132,15 +132,19 @@ const Recommendations = () => {
             })}
 
             {/* Other Matches */}
-            <div className="text-center mb-8">
-              <h3 className="text-2xl font-bold text-purple-800 mb-4">
-                Great Matches
-              </h3>
-              <p className="text-purple-600">
-                Explore these alternative career paths that align with your
-                skills
-              </p>
-            </div>
+            {careersWithUI.length > 1 ? (
+              <div className="text-center mb-8">
+                <h3 className="text-2xl font-bold text-purple-800 mb-4">
+                  Great Matches
+                </h3>
+                <p className="text-purple-600">
+                  Explore these alternative career paths that align with your
+                  skills
+                </p>
+              </div>
+            ) : (
+              ""
+            )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               {careersWithUI?.map((career) =>
