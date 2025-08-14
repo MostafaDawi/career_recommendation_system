@@ -6,7 +6,7 @@ import { ClipLoader } from "react-spinners";
 import { toast } from "react-toastify";
 
 const Login = () => {
-  const { login, loginError, isAuthenticated, isLoading } = useAuth();
+  const { login, loginError, isAuthenticated, loginLoading } = useAuth();
 
   const [loginForm, ChangeForm] = useState({
     email: "",
@@ -133,10 +133,10 @@ const Login = () => {
                   <button
                     type="submit"
                     className={`${
-                      isLoading ? "cursor-not-allowed" : ""
+                      loginLoading ? "cursor-not-allowed" : ""
                     } w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-indigo-500 to-indigo-600 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 `}
                   >
-                    {!isLoading ? "Sign in" : <ClipLoader />}
+                    {!loginLoading ? "Sign in" : <ClipLoader />}
                   </button>
                 </div>
               </form>
