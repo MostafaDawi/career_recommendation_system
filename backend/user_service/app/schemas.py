@@ -20,11 +20,14 @@ class UserLogin(BaseModel):
 class UserUpdate(BaseModel):
     name: Optional[str] = None
     email: Optional[EmailStr] = None
-    password: Optional[str] = None
     description: Optional[str] = None
     skills: Optional[List[str]] = None
     interests: Optional[List[str]] = None
     personality: Optional[dict] = None
+
+class PasswordUpdate(BaseModel):
+    oldPassword: str
+    newPassword: str
 
 class UserOut(BaseModel):
     id: int

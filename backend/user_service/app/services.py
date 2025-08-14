@@ -1,3 +1,5 @@
+from fastapi import HTTPException
+from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app import models, schemas
@@ -44,14 +46,38 @@ async def update_user(db:AsyncSession, user_id: int, req: schemas.UserUpdate):
 
     if user:
         updates = req.model_dump(exclude_unset=True)
-
-        if "password" in updates:
-            updates["password"] = utils.hash_password(updates["password"])
-
         for key, value in updates.items():
             setattr(user, key, value)
 
         await db.commit()
         await db.refresh(user)
     return user
+
+ # Update user's information   
+async def update_password(db:AsyncSession, user_id: int, req: schemas.PasswordUpdate):
+    result = await db.execute(select(models.User).where(models.User.id == user_id))
+    user = result.scalar_one_or_none()
+
+    if user:
+        body = req.model_dump(exclude_unset=True)
+        oldPassValid = utils.verify_password(body["oldPassword"], user.password)
+
+        if(oldPassValid is False):
+            raise HTTPException(status_code=401, detail="Invalid current password")
+        
+        newPassValid = utils.verify_password(body["newPassword"], user.password)
+
+        if (newPassValid):
+            raise HTTPException(status_code=401, detail="New password can't be the same as the older one")
+
+        update_pass = utils.hash_password(body["newPassword"])
+
+        setattr(user, "password", update_pass)
+        print("Password Updated: ", update_pass)
+        
+        await db.commit()
+        await db.refresh(user)
+
+    return user
+
 

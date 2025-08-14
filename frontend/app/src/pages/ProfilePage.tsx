@@ -37,6 +37,10 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onLogout }) => {
     description: "",
     personality: {},
   });
+  const [skillsInput, setSkillsInput] = useState(user?.skills.join(","));
+  const [interestsInput, setInterestsInput] = useState(
+    user?.interests.join(",")
+  );
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -58,7 +62,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onLogout }) => {
 
   console.log(profile);
   return (
-    <div className="py-20 bg-gray-100 min-h-screen">
+    <div className="py-20 min-h-screen">
       <div className="max-w-4xl mx-auto px-1 sm:px-6 lg:px-8">
         <div className="bg-white p-12 rounded-lg shadow-xl text-center">
           <h1 className="flex gap-6 items-center place-content-center text-4xl font-bold text-gray-900 mb-4">
@@ -126,15 +130,20 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onLogout }) => {
                   id="skills"
                   name="skills"
                   type="text"
-                  value={profile.skills.join(", ")}
-                  onChange={(e) =>
+                  value={skillsInput}
+                  onChange={(e) => setSkillsInput(() => e.target.value)}
+                  onBlur={() => {
                     setProfile((prev) => ({
                       ...prev,
-                      skills: e.target.value.split(",").map((s) => s.trim()),
-                    }))
-                  }
+                      skills: skillsInput
+                        .split(",")
+                        .map((s) => s.trim())
+                        .filter(Boolean), // remove empty entries
+                    }));
+                  }}
                   className="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-blue-200"
                   placeholder="JavaScript, React, TailwindCSS"
+                  required
                 />
               </div>
 
@@ -150,15 +159,20 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onLogout }) => {
                   id="interests"
                   name="interests"
                   type="text"
-                  value={profile.interests.join(", ")}
-                  onChange={(e) =>
+                  value={interestsInput}
+                  onChange={(e) => setInterestsInput(() => e.target.value)}
+                  onBlur={() => {
                     setProfile((prev) => ({
                       ...prev,
-                      interests: e.target.value.split(",").map((i) => i.trim()),
-                    }))
-                  }
+                      interests: interestsInput
+                        .split(",")
+                        .map((s) => s.trim())
+                        .filter(Boolean), // remove empty entries
+                    }));
+                  }}
                   className="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-blue-200"
                   placeholder="Music, Coding, Gaming"
+                  required
                 />
               </div>
 
