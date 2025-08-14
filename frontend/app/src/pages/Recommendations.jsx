@@ -62,8 +62,7 @@ const Recommendations = () => {
     }
   }, [user, recommended_jobs, isError]);
 
-  if (!careers || !recommended_jobs?.data) {
-    console.log("Careers: ", recommended_jobs?.data);
+  if (!authorize_and_ready) {
     return (
       <div className="min-h-screen flex flex-col justify-center items-center">
         <p className="text-lg mb-4">
