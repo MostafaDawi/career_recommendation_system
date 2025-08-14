@@ -346,11 +346,11 @@ const JobPage = () => {
         </div>
         {/* Results Info */}
         <div className="results-info mb-4">
-          {filteredJobs?.length > 0
+          {jobsToShow?.length > 0
             ? `Showing ${(currentPage - 1) * jobsPerPage + 1}-${Math.min(
                 currentPage * jobsPerPage,
-                filteredJobs?.length
-              )} of ${filteredJobs?.length} jobs`
+                jobsToShow?.length
+              )} of ${jobsToShow?.length} jobs`
             : "No jobs found."}
         </div>
         {/* Jobs Grid */}
