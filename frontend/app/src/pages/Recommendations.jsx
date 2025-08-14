@@ -132,7 +132,7 @@ const Recommendations = () => {
             })}
 
             {/* Other Matches */}
-            {careersWithUI.length > 1 ? (
+            {careersWithUI?.length > 1 ? (
               <div className="text-center mb-8">
                 <h3 className="text-2xl font-bold text-purple-800 mb-4">
                   Great Matches
