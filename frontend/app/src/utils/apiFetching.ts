@@ -22,7 +22,6 @@ interface userInfo {
 interface JobModel {
   id: any;
   job_title: string;
-  company: string;
   location: string;
   score: number;
   tags: Array<string>;

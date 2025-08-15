@@ -39,7 +39,6 @@ async def search_query(request: schemas.SearchRequest):
             "id": payload.get("job_id", None),
             "job_title": payload.get("job_title", "N/A"),
             "description": payload.get("description", "No description yet.."),
-            "company": payload.get("company", "N/A"),
             "location": payload.get("location", "N/A"),
             "tags": payload.get("tags", "N/A"),
             "companyName":payload.get("companyName", "N/A"),

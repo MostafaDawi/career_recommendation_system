@@ -169,7 +169,7 @@ const Recommendations = () => {
 
       {openModal && (
         <CareerModal
-          career={careers?.find((c) => c.id === openModal)}
+          career={careersWithUI?.find((c) => c.id === openModal)}
           onClose={() => setOpenModal(null)}
         />
       )}
