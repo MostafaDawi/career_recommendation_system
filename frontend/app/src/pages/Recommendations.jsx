@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../utils/hooks";
-import { useNavigate } from "react-router-dom";
+import { data, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import CareerCard from "../components/CareerCard";
 import FloatingElements from "../components/FloatingElements";
@@ -99,12 +99,12 @@ const Recommendations = () => {
       <FloatingElements />
       <div className="container mx-auto px-6 py-8 relative z-10">
         <Header />
-        {isLoading || recommended_jobs?.data === undefined ? (
+        {isLoading ? (
           <div className="flex justify-center gap-4 items-center text-center mt-5">
             <ClipLoader />
             Fetching Recommended Job...
           </div>
-        ) : (
+        ) : careersWithUI.length > 0 ? (
           <div className="max-w-6xl mx-auto">
             {/* Top Match */}
             {careersWithUI?.map((career) => {
@@ -160,6 +160,10 @@ const Recommendations = () => {
               )}
             </div>
           </div>
+        ) : (
+          <p className="text-center text-red-500">
+            No Jobs Available for you..
+          </p>
         )}
       </div>
 
