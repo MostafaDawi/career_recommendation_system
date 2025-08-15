@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 import httpx
 
 UNSAFE_HEADERS = {
@@ -35,6 +36,5 @@ async def forward_request(method, url, headers=None, json=None, params=None):
         try:
             response = await client.request(**request_)
             return response
-        except httpx.HTTPStatusError as exc:
-            print(f"Error response {exc.response.status_code}: {exc.response.text}")
-            return exc.response  # Forward the actual response
+        except Exception as e:
+            raise HTTPException(status_code=500, detail="Service is down. Try again later") # Forward the actual response

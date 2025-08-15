@@ -12,11 +12,12 @@ AUTH_SERVICE_URL = os.getenv("AUTH_SERVICE_URL", "http://localhost:8001/auth")
 async def login_user(request: Request):
     body = await request.json()
     url = f"{AUTH_SERVICE_URL}/login"
+
     response = await forward_request("POST", url, json=body)
     
     if(response.is_error):
         return JSONResponse(
-            {"error": f"Invalid response from Auth service: {response.text}"},
+            content=response.text,
             status_code=response.status_code
         )
     data = response.json()
@@ -30,7 +31,7 @@ async def register_user(request: Request):
     response = await forward_request("POST", url, json=body) 
     if(response.is_error):
         return JSONResponse(
-            {"error": f"Invalid response from Auth service: {response.text}"},
+            content=response.text,
             status_code=response.status_code
         )
     data = response.json()
@@ -42,7 +43,7 @@ async def get_current_user(request: Request, token_data=Depends(verify_jwt_token
     response = await forward_request("GET", url, headers=request.headers)
     if(response.is_error):
         return JSONResponse(
-            {"error": f"Invalid response from Auth service: {response.text}"},
+            content=response.text,
             status_code=response.status_code
         )
     data = response.json()
