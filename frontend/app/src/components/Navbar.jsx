@@ -83,18 +83,7 @@ function Navbar() {
               >
                 Jobs
               </Link>
-              <Link
-                to="/contact"
-                className="nav-link border-transparent text-gray-600 hover:text-indigo-600 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-              >
-                Contact Us
-              </Link>
-              <Link
-                to="/about"
-                className="nav-link border-transparent text-gray-600 hover:text-indigo-600 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-              >
-                About
-              </Link>
+              
 
               {/* Dropdown Trigger */}
               {isAuthenticated ? (
@@ -144,6 +133,20 @@ function Navbar() {
                   Start Assessment
                 </Link>
               )}
+              <Link
+                to="/about"
+                className="nav-link border-transparent text-gray-600 hover:text-indigo-600 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+              >
+                About
+              </Link>
+              
+              <Link
+                to="/contact"
+                className="nav-link border-transparent text-gray-600 hover:text-indigo-600 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+              >
+                Contact Us
+              </Link>
+              
             </div>
           </div>
 
