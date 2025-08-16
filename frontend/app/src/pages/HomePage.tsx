@@ -576,9 +576,13 @@ const CTASection: React.FC<HomePageProps> = ({ onStartQuiz }) => (
         >
           Start Free Assessment
         </button>
-        <button className="border border-white px-8 py-4 rounded-md font-semibold hover:bg-white hover:text-indigo-600 transition duration-300">
-          View Demo
-        </button>
+
+          <a href="#assessment"
+            className="border border-white px-8 py-4 rounded-md font-semibold hover:bg-white hover:text-indigo-600 transition duration-300"
+          >
+            View Demo
+          </a>
+          
       </div>
     </div>
   </section>
