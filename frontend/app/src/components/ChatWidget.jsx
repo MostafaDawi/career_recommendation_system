@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./ChatWidget.css"; // add the CSS snippet below or convert to Tailwind
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000/chatbot";
+const API_URL =
+  import.meta.env.VITE_API_GATEWAY_URL || "http://localhost:8000/chatbot";
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
