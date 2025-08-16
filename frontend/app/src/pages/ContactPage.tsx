@@ -21,12 +21,6 @@ const ContactPage: React.FC<ContactPageProps> = ({ onSubmitFeedback }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-//  const handleSubmit = (e: React.FormEvent) => {
-  //  e.preventDefault();
-    //onSubmitFeedback(formData);
-    //setFormData({ name: "", email: "", message: "" });
-  //};
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const mailtoLink = `mailto:serenahaidar77@gmail.com?subject=${encodeURIComponent(
