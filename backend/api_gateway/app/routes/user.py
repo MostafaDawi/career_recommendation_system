@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, Depends
+from fastapi import APIRouter, HTTPException, Request, Depends
 from fastapi.responses import JSONResponse
 from utils.jwt import verify_jwt_token
 from utils.client import forward_request
@@ -19,10 +19,10 @@ async def update_user(request: Request, token_data=Depends(verify_jwt_token)):
     try:
         response = await forward_request("PUT", f"{USER_SERVICE_URL}/update_user/{user_id}", headers=request.headers, json=body)
         if(response.is_error):
-            return JSONResponse({"error": f"Failed to update user information {response.text}"}, status_code=response.status_code)
+            raise HTTPException(status_code=response.status_code, detail=response.text)
     except Exception as e:
-        print(f"[Caught an ERROR]: {e.message}")
-        return JSONResponse({"error": f"Failed to update user information {response.text}"}, status_code=response.status_code)
+        print(f"[Caught an ERROR]: {e.detail}")
+        raise HTTPException(status_code=response.status_code, detail=response.text)
     return JSONResponse({"data":response.json()}, status_code=response.status_code)
 
 @router.put("/change_password")
@@ -32,9 +32,9 @@ async def update_password(request: Request, token_data=Depends(verify_jwt_token)
     try:
         response = await forward_request("PUT", f"{USER_SERVICE_URL}/change_pass/{user_id}", headers=request.headers, json=body)
         if(response.is_error):
-            return JSONResponse({"error": f"Failed to change user password {response.text}"}, status_code=response.status_code)
+            raise HTTPException(status_code=response.status_code, detail=response.text)
     
     except Exception as e:
-        print(f"[Caught an ERROR]: {e.message}")
-        return JSONResponse({"error": f"Failed to change user password {response.text}"}, status_code=response.status_code)
+        print(f"[Caught an ERROR]: {e.detail}")
+        raise HTTPException(status_code=response.status_code, detail=response.text)
     return JSONResponse({"data": response.json()}, status_code=response.status_code)

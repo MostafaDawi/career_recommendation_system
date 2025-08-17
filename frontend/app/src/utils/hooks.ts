@@ -180,7 +180,7 @@ export function useAuth() {
       });
     },
     onError: (error: any) => {
-      toast.error(`User password update failed: ${error?.message}`, {
+      toast.error(`${error?.message}`, {
         autoClose: 5000,
       });
     },
