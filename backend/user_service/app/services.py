@@ -51,6 +51,8 @@ async def update_user(db:AsyncSession, user_id: int, req: schemas.UserUpdate):
 
         await db.commit()
         await db.refresh(user)
+    else:
+        raise HTTPException(status_code=403, detail="User doesn't exist")
     return user
 
  # Update user's information   
