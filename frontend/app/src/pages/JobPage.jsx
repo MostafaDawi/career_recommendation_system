@@ -352,7 +352,7 @@ const JobPage = () => {
                 currentPage * jobsPerPage,
                 jobsToShow?.length
               )} of ${jobsToShow?.length} jobs`
-            : "No jobs found."}
+            : !isLoadingJobs && "No jobs found."}
         </div>
         {/* Jobs Grid */}
         <div className="jobs-grid">
