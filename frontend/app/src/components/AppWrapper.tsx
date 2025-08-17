@@ -46,6 +46,9 @@ function AppWrapper() {
     message: string;
   }) => {
     console.log(`Complaint: ${data.name} , ${data.email}, ${data.message}`);
+    alert(
+      `Message sent to ${data.name}. Thanks for your feedback! We'll get back to you in X business days :)`
+    );
   };
 
   const logoutApp = () => {

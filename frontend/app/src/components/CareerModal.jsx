@@ -1,7 +1,7 @@
 import { react } from "react";
 
 const CareerModal = ({ career, onClose }) => {
-  console.log("Career Model holding: ", career);
+  // console.log("Career Model holding: ", career);
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-400/50"

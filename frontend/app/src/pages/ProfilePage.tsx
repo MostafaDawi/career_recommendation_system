@@ -62,8 +62,8 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onLogout }) => {
 
   console.log(profile);
   return (
-    <div className="py-20 min-h-screen">
-      <div className="max-w-4xl mx-auto px-1 sm:px-6 lg:px-8">
+    <div className="py-10 min-h-screen">
+      <div className="max-w-6xl mx-auto px-1 sm:px-6 lg:px-8">
         <div className="bg-white p-12 rounded-lg shadow-xl text-center">
           <h1 className="flex gap-6 items-center place-content-center text-4xl font-bold text-gray-900 mb-4">
             <UserProfileIcon className="text-indigo-600 mx-auto mb-6" />
@@ -189,6 +189,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onLogout }) => {
                   name="description"
                   value={profile.description}
                   onChange={handleChange}
+                  rows={5}
                   className="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-blue-200"
                   placeholder="Tell us about yourself..."
                 />
@@ -224,23 +225,24 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onLogout }) => {
                 /> */}
               </div>
 
-              <button
-                type="submit"
-                className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition"
-              >
-                Update Profile
-              </button>
+              <div className="flex justify-center items-center gap-4 p-6">
+                <button
+                  type="submit"
+                  className=" bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-lg transition"
+                >
+                  Update Profile
+                </button>
+                <button
+                  onClick={onLogout}
+                  className="py-3 px-6 bg-red-600 text-white rounded-lg shadow-md hover:bg-red-700 transition-colors duration-300"
+                >
+                  Log Out
+                </button>
+              </div>
             </form>
           </div>
 
-          <div className="space-y-4">
-            <button
-              onClick={onLogout}
-              className="w-full py-3 px-6 bg-red-600 text-white rounded-lg shadow-md hover:bg-red-700 transition-colors duration-300"
-            >
-              Log Out
-            </button>
-          </div>
+          <div className="space-y-4 max-w-xl"></div>
         </div>
       </div>
     </div>

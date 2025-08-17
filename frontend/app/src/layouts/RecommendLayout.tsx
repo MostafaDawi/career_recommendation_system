@@ -7,7 +7,7 @@ const RecommendLayout = () => {
   return (
     <>
       <Navbar />
-      <main className="pt-10 font-['Poppins'] gradient-bg min-h-screen">
+      <main className="font-['Poppins'] gradient-bg min-h-screen">
         <Outlet />
       </main>
       <Footer />

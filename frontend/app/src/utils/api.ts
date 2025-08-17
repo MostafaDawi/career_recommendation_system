@@ -27,12 +27,12 @@ export async function handleRequest<T>(
       // Throwing error here is crucial for React Query to catch it
       const errorString = await response.json();
       const error = JSON.parse(errorString?.detail);
-      console.log("Json error: ", error.detail);
+      // console.log("Json error: ", error.detail);
       throw new Error(error.detail || "Request failed");
     }
 
     const data: T = await response.json();
-    console.log("returned data from handleRequest: ", data);
+    // console.log("returned data from handleRequest: ", data);
     return data;
   } catch (error) {
     console.error("Error: ", error?.message);
