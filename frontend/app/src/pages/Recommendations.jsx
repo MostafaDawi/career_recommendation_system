@@ -38,7 +38,7 @@ const Recommendations = () => {
   const [careers, setCareers] = useState([]);
   const navigate = useNavigate();
 
-  console.log(user);
+  // console.log(user);
   const all_info_ready =
     user?.description !== undefined &&
     user?.interests !== undefined &&
@@ -84,7 +84,7 @@ const Recommendations = () => {
     icon: icons[Math.floor(Math.random() * icons.length)],
   }));
 
-  console.log("Retrieved Jobs: ", recommended_jobs?.data);
+  // console.log("Retrieved Jobs: ", recommended_jobs?.data);
 
   if (isError)
     return (
@@ -95,9 +95,9 @@ const Recommendations = () => {
 
   // باقي الكود عادي
   return (
-    <div className="min-h-screen overflow-x-hidden relative">
+    <div className="min-h-screen overflow-x-hidden relative p-8">
       <FloatingElements />
-      <div className="container mx-auto px-6 py-8 relative z-10">
+      <div className="container mx-auto relative z-10">
         <Header />
         {isLoading ? (
           <div className="flex justify-center gap-4 items-center text-center mt-5">
@@ -108,7 +108,7 @@ const Recommendations = () => {
           <div className="max-w-6xl mx-auto">
             {/* Top Match */}
             {careersWithUI?.map((career) => {
-              console.log(career?.score);
+              // console.log(career?.score);
               if (career?.score > 0.5) {
                 return (
                   <div key={career.id} className="mb-12">
