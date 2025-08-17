@@ -20,14 +20,8 @@ For these reasons, we created CareerCompassAI: a career guidance platform that u
 - Python 3.11, FastAPI
 - Qdrant
 - Postgres
-- React
+- React (JavaScript, TypeScript)
 - Docker
-
-## Prerequisites
-- Docker & Docker Compose
-- Node 18+ (if running frontend locally)
-- Python 3.11+ (if running services without Docker)
-
 
 ## Repository structure
 - /backend: contains all the backend code including a folder for each microservice
@@ -50,6 +44,12 @@ For these reasons, we created CareerCompassAI: a career guidance platform that u
 - Node 18+ (if running frontend locally)
 - Python 3.11+ (if running services without Docker)
 
+## Run the frontend application
+
+```bash
+# Run using npm (Vite)
+npm run dev
+```
 
 ## Run with Docker 
 
@@ -80,16 +80,15 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8001
 | vectordb_service | 8005 | Qdrant adapter | depends_on qdrant
 | chatbot_service | 8006 | Chatbot | Uvicorn command in compose
 
-
-
 ## Documentation
 
 For more details about system design, dataset, architecture, and team: [Full Project Documentation](https://docs.google.com/document/d/1ct8lyak4IhGC6fbanGfvAvZ5zTgaOEdIl-91cH7evvk/edit?tab=t.0)
 
 ### Contributors
 
+    Mostafa Dawi
     Hassan Kheireddin
     Katia Matar
-    Mostafa Dawi
     Serena Haidar
     Zahraa Meselmani
+
