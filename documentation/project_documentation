@@ -1,57 +1,304 @@
-# Project Documentation
+
+# CareerCompassAI
+#### The AI-powered career recommendation system
+![CareerCompassAI](main_page.png)
+
+August 2025
+
+### Created by:
+
+- Hassan Kheireddin
+- Katia Matar
+- Mostafa Dawi
+- Serena Haidar
+- Zahraa Meselmani
+
+# Project Overview
+
+CareerCompassAI is a system designed to provide personalized career recommendations based on users’ personality traits and skills. It uses vector embeddings and AI-powered search to match users with suitable career paths efficiently.
+
+# Motivation and Problem Statement
+
+Most students graduate from high school without knowing what to study at university. They consult family and friends and often choose a major according to external factors, not according to what aligns with their personality traits, skills, and motivation. For university students, many get stuck in a major they don’t feel passionate about, and find themselves lost after graduation, unsure about what career path to pursue and what suits them.
+
+For these reasons, we created CareerCompassAI: a career guidance platform that uses artificial intelligence to provide personalized career recommendations tailored to individual personality traits, skills, and interests. By analyzing user inputs and matching them with comprehensive career data through advanced embedding techniques, CareerCompassAI aims to help users make informed decisions about their academic and professional futures.
+
+# Goals
+
+- Deliver accurate career recommendations tailored to individual profiles.
+- Provide an interactive chatbot for career-related queries.
+- Ensure a responsive and user-friendly interface.
+- Maintain a scalable and modular system architecture
+
+# Key features
+
+- Career recommendations based on personality and skills
+- High accuracy with embedding similarity
+- Interactive chatbot for FAQs
+- Responsive user interface
+
+# Primary users & Stakeholders
+
+- Students (high school and university): primary users
+- Career counselors and educators: secondary users
+- Job posters: they manage the job catalog and skills
+
+# System Overview
+
+CareerCompassAI uses a **microservices** architecture separating frontend, backend, and database components.
+
+- The frontend is responsible for user interaction
+- The backend processes embedding generation and recommendation logic
+- The database manages user, job, and vector storage and retrieval.
+- Services communicate through HTTP protocol and REST APIs: **\[API Gateway > certain service > stores data/fetches data/ asks for another service > receives response > API Gateway\]**
+
+Users submit profile data (assessment answers, skills, interests) via the frontend. The frontend calls the API gateway, which routes requests to the appropriate backend service:
+
+1. Embedding generation: embedding_service (<http://localhost:8003>) — converts text to vectors.
+2. Vector storage & search: vectordb_service (<http://localhost:8005>) — reads/writes to Qdrant (qdrant:6333).
+3. Recommendation logic: recommendation_service (<http://localhost:8002>) — composes embeddings + vector search + relational metadata (Postgres) to produce ranked recommendations.
+4. Job management: job_service (<http://localhost:8004>) — CRUD for job postings and metadata.
+5. User data: user_service (<http://localhost:8001>) — user profiles and traits persisted in Postgres.
+6. API gateway: api_gateway (<http://localhost:8000>) — external entry point.
+7. Chatbot: chatbot_service (<http://localhost:8006>) — conversational retrieval & FAQ.
+
+Inter-service communication occurs over HTTP/JSON across the Docker network (services reference each other by compose service name, e.g., vectordb_service calls qdrant:6333).
+
+![Diagram](architecture.png)
+_Diagram showing the data flow and microservices in the system_
+
+# Technologies Used
+
+- Python 3.11, FastAPI: backend
+- Qdrant (vector DB): qdrant/qdrant exposed at host port 6333
+- Postgres 16/17: internal port 5432,
+- React (19.1.0), Tailwind CSS (Vite application): frontend
+- Docker and Docker Compose
+
+# Components & responsibilities
+
+- **Frontend (React):** UI, assessment quiz, recommendations & job pages.
+- **API Gateway:** single entry point, CORS, routing, and authentication layer.
+- **User Service:** CRUD for user profiles; stores profile metadata in Postgres.
+- **Embedding Service**: produces embeddings for users and jobs using the agreed model.
+- **VectorDB Service**: interacts with Qdrant (create collection, upsert points, search).
+- **Job Service**: maintain job postings and metadata in Postgres.
+- **Recommendation Service:** ranking and business rules; composes embedding + vector search + metadata filters.
+- **Chatbot**: FAQ and clarifications
+
+# Data & Storage
+
+## Relational database (Postgres)
+
+Role: canonical relational store for users, jobs, skills, and interaction logs. Connection examples :
+
+- For user_service: DATABASE_URL=postgresql+asyncpg://user:password@postgres:5432/user_service_db  
+
+- For job_service: DATABASE_URL=postgresql+asyncpg://user:password@postgres:5432/job_service_db  
+
+High-level schema (summary; adjust to actual initdb/ SQL):
+
+- users — (id PK, email VARCHAR, name VARCHAR, traits JSON, created_at TIMESTAMP)  
+
+- jobs — (id PK, title VARCHAR, description, tags TEXT\[\], companyName, contactEmail, jobType, location, created_at)
+
+## Vector database (Qdrant)
+
+Role: stores and indexes vector embeddings for jobs(collection \`jobs-collection\`), for efficient nearest-neighbour search, and performs semantic search using cosine similarity to find the best job for each user.
+
+- Qdrant host inside Docker network: qdrant:6333.
+- Common collection name: jobs-collection
+- Similarity metric: cosine
+
+### Qdrant point payload
+
+Each Qdrant point stores:
+
+```JSON
+{
+
+"id": "&lt;job_id&gt;",
+
+"vector": \[...\],
+
+"payload": {
+
+"job_id": "&lt;job_id&gt;",
+
+"title": "Software Engineer",
+
+"company": "ACME",
+
+"location": "Remote",
+
+"tags": \["python","ml"\],
+
+"description": "Build ML systems..."
+
+}
+}
+```
+
+# Embeddings and Recommendation Engine
+
+The purpose of this engine is to transform user profiles and job postings into dense vectors in the same embedding space so that similarity search is meaningful.
+
+## Embedding generation
+
+- Embeddings are created by the **Embedding Service** (embeddings.py).
+- Fields are merged into a single text string before embedding: user inputs use **Interests, Skills,** **Personality,** and **Description**; job postings use **Title, Description**, and **Requirements**.
+- The service uses a sentence-transformer model (**all-MiniLM-L6-v2**) to encode text via **model.encode(...),** and transform it into a vector of 384 dimensions
+- The embedding endpoint signatures:
+  - **POST /embed/user → receives user data, returns {"embedding": \[...\]}.**
+  - **POST /embed/job → receives job data, returns {"embedding": \[...\]}.  
+        **
+
+## Embedding service endpoints
+
+Embedding service base: <http://localhost:8003>
+
+**POST** /embed/user  
+Request body:
+```JSON
+{
+
+"user_id": "user-123",
+
+"name": "Alice",
+
+"skills": \["python", "sql"\],
+
+"interests": "data science, ai",
+
+"personality": "analytical, curious",
+
+"free_text": "I enjoy building ML prototypes."
+
+}
+```
+Response:
+```JSON
+{
+
+"embedding": \[0.0123, -0.234, ...\]
+
+}
+```
+# Search and ranking: recommendation workflow
+
+1. Frontend requests recommendations for a user (via api_gateway → recommendation_service at <http://localhost:8002>).
+2. The recommendation_service obtains or computes the user embedding:
+
+- If stored user embedding exists: use it.
+- Else: call embedding_service (/embed/user) to compute embedding.
+
+1. Call vectordb_service /vector/search with the embedding and any filters (location, level, etc.). Example:
+
+- POST <http://localhost:8005/vector/search> with { vector, top_k, filters }.  
+
+1. The vectordb_service returns nearest points, each with payload and score.
+2. Return the top-3 ranked items to the frontend.
+
+# Front-end Implementation
+
+The frontend is built with React and Tailwind CSS. It represents the main page, the assessment quiz, displays recommendations, and job details.
+
+The frontend communicates with the backend via the API Gateway (development base URL: <http://localhost:8000>).
+
+The app is built using React, making it fast, interactive, and smooth.
+
+- **React**: to build the UI from components (modular blocks), making it easy to manage and scale. We use **Hooks** like **useState** for managing dynamic data (like tracking quiz progress), and **useEffec**t for handling side effects (timers, data fetching, etc).
+- **React-Router:** Handles all the navigation across the DOM using routing elements and handling layouts accordingly
+- **Tailwind CSS:** Faster than regular CSS and easier to maintain, Tailwind is a utility-first styling framework. Its responsive classes **(md, lg..)** ensure perfect looking pages on every screen size
+- **React-Hook-Form:** This library manages all the forms efficiently, and builds robust forms with minimal code.
+
+## Pages and components
+
+### Login / Registration pages
+
+- **Login:** Users can login to access the user profile, assessments and other features.
+- **Registration:** User can register their accounts using valid credentials that’ll securely stored in PostgreSQL database
 
 
+### Home Page
 
-## 1. Motivation & Problem Statement
+- **Hero Section:** An eye-catching introduction with a clear **Call to Action (CTA)**: "Start Free Assessment".
+- **Stats Section:** Builds credibility with numbers like **"Over 100,000 careers discovered!"**
+- **Features Section:** Highlights the app’s benefits with clean icons.
+- **Assessment Section:** Directly encourages users to start their career recommendation journey.
+- **Careers Section:** Previews potential career matches to pique user interest.
 
-Why did you build this? What gap are you solving?
+### Navigation & Interactivity
 
-## 2. System Overview
+- **Header:** Provides navigation and a mobile menu toggle ☰ for a seamless experience on any device.
+- **Footer:** Contains branding, quick links, and legal details.
+- **SVG Icons:** Ensures all our icons are crisp and scalable.
 
-What does the system do? Diagram if possible.
+### Job Service
 
-##  Technologies Used
+The Job Service is responsible for managing all operations related to job postings on the platform. It is built with Python for the application logic and PostgreSQL for reliable data storage. The service provides functionality to create, update, retrieve, and manage job listings, ensuring fast and consistent access to job data through optimized queries and proper indexing
 
+A key feature of the Job Service is that every registered user can contribute by adding new job postings, which makes the system collaborative and keeps the job board dynamic. Employers or users can input details such as job title, description, requirements, and location, which are stored securely in the database
 
-## Architecture
+### Quiz page
 
-- Overview of components (e.g., frontend, backend, database)
-- Microservice interactions
-- Data flow
+- Powered by the **use of the MBTIQuiz** hook, these pages track the user’s current question, answers, and slider states
+- Smooth animations provide a modern, polished feel that keeps the user engaged.
 
-## Embedding & Recommendation Engine
+When the user takes a quiz, the result is stored in their profile picture. This info, along with other info stored in the user profile (like skills and interests), will be embedded as one vector. This vector will be used to find the most suitable job for each user.
 
-- How embeddings are created
-- How cosine similarity or vector search is used
-- Qdrant usage and queries
+### Recommendation page
 
-## Dataset
+This page shows the user a list of career/job recommendations generated based on their profile data (skills, interests, personality type, etc.).
 
-- What data was used
-- How it was cleaned or embedded
-- Any limitations
+Its main goal is to recommend career paths or jobs to users that match their personal and professional interests and strengths. The page displays:
 
-## Key Features
+- Three Recommendation Cards, with one card highlighted to indicate the Top Match.
+- Each card shows the job title, a short description, and the match percentage, and when clicked, its takes the user to a Job Details page, which includes:
+  - A detailed job description
+  - Required skills.
+  - A career roadmap (steps to achieve the role).
 
-- Career suggestions
-- FAQ chatbot
+#### **Data Flow**
 
+1. **User Authentication Check**
+    - Uses **useAuth** to verify if the user is logged in.
+    - isAuthenticated → True/False.
+    - user → Contains skills, interests, and personality type.  
 
-## Deployment & Hosting
+2. **Fetching Recommendations**
+    - If authenticated, sends user profile data (skills, interests, personality) to the backend API.
+    - The backend analyzes this data and responds with:
+        - The top 3 recommended careers/jobs.
+        - An indication of which one is the Top Match.
+3. **Unauthenticated Users**
+    - If not logged in, the page displays.
+        - A message prompting them to complete their profile or log in.
+        - A button linking to the Profile Page.
 
-- Docker setup
-- API hosting (if applicable)
-- vercel frontend hosting
+# Deployment and hosting 
 
-## Future Work
+The application is containerized using Docker. Backend services run on Render, while the frontend is deployed via Vercel . To run the services locally, Docker Desktop must be installed (Windows), then:
 
-- What could be added/improved?
+- **Docker setup**: access the docker-compose.yml at the project’s folder and run _docker compose up._ This will pull the images using the Dockerfiles at each service, build and run the services each in a container
+- **Cloud setup**: the project is deployed on the cloud (Render free tier), you can access the app at the url: [_https://career-recommendation-system-mu.vercel.app_](https://career-recommendation-system-mu.vercel.app)
+<br>
 
-## Contributors
+![Deployed services](deployed_services.png)
+# Conclusion
 
-team with roles in more detail.
+**CareerCompass AI** is the ultimate career guide for any student unsure about their future path, or professionals considering a career switch.
 
-## References
+# Limitations and considerations
 
-- Research papers
-- APIs or libraries used
+- Quality depends on the embedding model and the richness of text fields. Short or noisy descriptions reduce match quality.
+- Embeddings capture semantic similarity but do not encode explicit hard constraints (like visa requirements or legal eligibility). Use payload filters for such constraints.
+
+# Future improvements
+
+- Add hybrid search combining keyword filters with vector similarity for better precision on concrete constraints.
+- Implement personalized re-ranking using user interaction signals and simple weighting of metadata (e.g., location priority).
+- Multiple user roles (“Student”, “Freelancer”, “Recruiter”) each with their own set of authorized features to be used, for diversifying the functions of the platform
+- Forgot password for changing the current user’s password (Not implemented yet)
+- Job search engine in the job page to get particular jobs tailored for user’s filters
+- Communities and Groups which can enhance the experience by adding user communication and interaction with other talents or recruiters which can benefit all parties and add to the value of the platform

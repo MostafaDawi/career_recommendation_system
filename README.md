@@ -1,5 +1,5 @@
 # CareerCompassAI
-
+![CareerCompassAI](documentation/main_page.png)
 ## Overview
 
 CareerCompassAI is an AI-Powered Career Recommendation System to match students, fresh grads and freelancers to jobs according to their interests, skills, and personality.
@@ -18,10 +18,10 @@ For these reasons, we created CareerCompassAI: a career guidance platform that u
 
 ## Tech Stack
 - Python 3.11, FastAPI
-- Qdrant
-- Postgres
-- React (JavaScript, TypeScript)
-- Docker
+- Qdrant (vector DB)
+- Postgres 16/17 
+- React (19.1.0), Tailwind CSS (Vite application)
+- Docker and Docker Compose 
 
 ## Repository structure
 - /backend: contains all the backend code including a folder for each microservice
@@ -82,13 +82,7 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8001
 
 ## Documentation
 
-For more details about system design, dataset, architecture, and team: [Full Project Documentation](https://docs.google.com/document/d/1ct8lyak4IhGC6fbanGfvAvZ5zTgaOEdIl-91cH7evvk/edit?tab=t.0)
+For more details about system design, dataset, architecture, and team: [Full Project Documentation](/documentation/project_documentation)
 
 ### Contributors
-
-    Mostafa Dawi
-    Hassan Kheireddin
-    Katia Matar
-    Serena Haidar
-    Zahraa Meselmani
-
+![Contributors](documentation/contrib.png)
