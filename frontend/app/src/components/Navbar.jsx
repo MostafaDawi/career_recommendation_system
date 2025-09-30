@@ -205,7 +205,7 @@ function Navbar() {
                     </ul>
                   </div>
                 </div>
-                <div className="font-bold">{user.name}</div>
+                <div className="font-bold">{user?.name}</div>
               </div>
             )}
           </div>

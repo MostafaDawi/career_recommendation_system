@@ -23,14 +23,17 @@ export async function handleRequest<T>(
 
     const response = await fetch(url, options);
 
-    const json = await response.json();
-
     if (!response.ok) {
       // Throwing error here is crucial for React Query to catch it
-      throw new Error(json?.error || json?.detail || "Request failed");
+      const errorString = await response.json();
+      const error = JSON.parse(errorString?.detail);
+      // console.log("Json error: ", error.detail);
+      throw new Error(error.detail || "Request failed");
     }
-    console.log("returned data from handleRequest: ", json);
-    return json as T;
+
+    const data: T = await response.json();
+    // console.log("returned data from handleRequest: ", data);
+    return data;
   } catch (error) {
     console.error("Error: ", error?.message);
     throw error;

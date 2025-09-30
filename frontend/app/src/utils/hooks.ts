@@ -98,7 +98,7 @@ export function useAuth() {
         user_input
       ),
     onSuccess: (response) => {
-      console.log(response);
+      // console.log(response);
       const token = response?.data?.access_token;
       if (token) {
         setToken(token);
@@ -152,7 +152,7 @@ export function useAuth() {
         user_input
       ),
     onSuccess: (response: UserResponse) => {
-      console.log(response);
+      // console.log(response);
       toast.success("User profile was updated successfully!", {
         autoClose: 5000,
       });
@@ -174,13 +174,13 @@ export function useAuth() {
         user_input
       ),
     onSuccess: (response: UserResponse) => {
-      console.log(response);
+      // console.log(response);
       toast.success("User password was updated successfully!", {
         autoClose: 5000,
       });
     },
     onError: (error: any) => {
-      toast.error(`User password update failed: ${error?.message}`, {
+      toast.error(`${error?.message}`, {
         autoClose: 5000,
       });
     },

@@ -24,15 +24,15 @@ const CareerCard = ({ career, onClick, isTopMatch = false }) => {
         >
           {career.job_title}
         </h2>
-        <p
+        {/* <p
           className={`${
             isTopMatch ? "text-white text-opacity-90" : "text-purple-700"
           } mb-6 ${
             isTopMatch ? "max-w-md mx-auto text-lg" : "text-sm leading-relaxed"
           }`}
         >
-          {career.description}
-        </p>
+          {career.description.length }
+        </p> */}
         <div
           className={`inline-flex items-center ${
             isTopMatch

@@ -23,12 +23,6 @@ For these reasons, we created CareerCompassAI: a career guidance platform that u
 - React (19.1.0), Tailwind CSS (Vite application)
 - Docker and Docker Compose 
 
-## Prerequisites
-- Docker & Docker Compose
-- Node 18+ (if running frontend locally)
-- Python 3.11+ (if running services without Docker)
-
-
 ## Repository structure
 - /backend: contains all the backend code including a folder for each microservice
     - api_gateway
@@ -50,6 +44,12 @@ For these reasons, we created CareerCompassAI: a career guidance platform that u
 - Node 18+ (if running frontend locally)
 - Python 3.11+ (if running services without Docker)
 
+## Run the frontend application
+
+```bash
+# Run using npm (Vite)
+npm run dev
+```
 
 ## Run with Docker 
 
@@ -79,8 +79,6 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8001
 | job_service | 8004 | Jobs CRUD | env: DATABASE_URL=postgresql+asyncpg://user:password@postgres:5432/job_service_db
 | vectordb_service | 8005 | Qdrant adapter | depends_on qdrant
 | chatbot_service | 8006 | Chatbot | Uvicorn command in compose
-
-
 
 ## Documentation
 

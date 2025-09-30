@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, Depends
+from fastapi import APIRouter, HTTPException, Request, Depends
 from fastapi.responses import JSONResponse
 from utils.jwt import verify_jwt_token
 from utils.client import forward_request
@@ -15,11 +15,9 @@ async def login_user(request: Request):
 
     response = await forward_request("POST", url, json=body)
     
-    if(response.is_error):
-        return JSONResponse(
-            content=response.text,
-            status_code=response.status_code
-        )
+    if response.is_error:
+        raise HTTPException(status_code=response.status_code, detail=response.text)
+    
     data = response.json()
     return JSONResponse({"data":data}, status_code=200)
 
@@ -28,23 +26,23 @@ async def login_user(request: Request):
 async def register_user(request: Request):
     body = await request.json()
     url = f"{AUTH_SERVICE_URL}/register"
+
     response = await forward_request("POST", url, json=body) 
-    if(response.is_error):
-        return JSONResponse(
-            content=response.text,
-            status_code=response.status_code
-        )
+
+    if response.is_error:
+        raise HTTPException(status_code=response.status_code, detail=response.text)
+    
     data = response.json()
     return JSONResponse({"data":data}, status_code=201)
 
 @router.get("/me")
 async def get_current_user(request: Request, token_data=Depends(verify_jwt_token)):
     url = f"{AUTH_SERVICE_URL}/me"
+    
     response = await forward_request("GET", url, headers=request.headers)
-    if(response.is_error):
-        return JSONResponse(
-            content=response.text,
-            status_code=response.status_code
-        )
+
+    if response.is_error:
+        raise HTTPException(status_code=response.status_code, detail=response.text)
+    
     data = response.json()
     return JSONResponse({"data":data}, status_code=200)

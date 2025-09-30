@@ -140,7 +140,7 @@ const JobPage = () => {
       setJobs(careers);
     }
   }, [careers]);
-  console.log("Received Jobs: ", jobs?.length);
+  // console.log("Received Jobs: ", jobs?.length);
 
   // Add Job Modal State
   const [showAddModal, setShowAddModal] = useState(false);
@@ -268,10 +268,11 @@ const JobPage = () => {
 
   const searchJob = () => {
     console.log("Submitted job search");
+    alert("Feature: Unavailable");
   };
 
   return (
-    <div className="main-content">
+    <div className="main-content p-10">
       <div className="container">
         <div className="filters-card">
           <h3 className="filters-title">Filter Jobs</h3>
@@ -351,7 +352,7 @@ const JobPage = () => {
                 currentPage * jobsPerPage,
                 jobsToShow?.length
               )} of ${jobsToShow?.length} jobs`
-            : "No jobs found."}
+            : !isLoadingJobs && "No jobs found."}
         </div>
         {/* Jobs Grid */}
         <div className="jobs-grid">
